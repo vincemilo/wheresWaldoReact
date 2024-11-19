@@ -11,6 +11,7 @@ export default function MagnifyingGlass({
   ];
   return (
     <div
+      className="magnifyingGlass"
       style={{
         display: showMagnifier ? "" : "none",
         position: "absolute",

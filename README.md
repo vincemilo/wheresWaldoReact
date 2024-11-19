@@ -1,8 +1,18 @@
-# React + Vite
+# Where's Waldo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A photo tagging app using React frontend and Rails backend.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Magnifying glass zooms in on image within its field of view
+- When section clicked, presents options of possible characters
+- Pixel position is stored on the database, will verify if selected target is correct
+- Timer for players to rank who can find all characters the fastest and display high scores
+
+### Process
+
+- First played with modals within React to get functionality working for pop-up menu
+- Originally tried playing with HTML canvas to create a targeting box but was ultimately not ideal
+- Played with offset functions to find the pixel position ratio of a given image regardless of the scale
+- Created the magnifying glass by setting the floating div background image as a magnification of the underlying background image
+- Once it was time to test I ported the sandbox over as a template to create the actual app and removed the old files I no longer needed. I like this method as I don't feel the stress of having the app be "perfect" off the bat

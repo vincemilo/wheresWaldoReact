@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { render, screen } from "@testing-library/react";
 import MousePosition from "../src/components/MousePosition";
 
 const positions = {
@@ -9,7 +10,7 @@ describe("MousePosition", () => {
   it(
     "should return the correct character when the correct target area is clicked"
   ),
-    () => {
-      render(<MousePosition />);
-    };
+    render(<MousePosition />);
+  //const magnifyingGlass = screen.getByRole("div");
+  screen.debug();
 });
