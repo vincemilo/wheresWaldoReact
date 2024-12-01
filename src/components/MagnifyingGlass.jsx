@@ -14,6 +14,7 @@ export default function MagnifyingGlass({
       className="magnifyingGlass"
       style={{
         display: showMagnifier ? "" : "none",
+        role: "region",
         position: "absolute",
         pointerEvents: "none",
         height: `${magHeight}px`,

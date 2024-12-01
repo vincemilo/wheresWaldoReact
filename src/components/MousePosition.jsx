@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import waldo from "../assets/waldo2.jpg";
-import MagnifyingGlass from "./MagnifyingGlass";
-import DropDown from "./DropDown";
+import BackgroundImg from "./BackgroundImg";
 
 export default function MousePosition() {
   const [[x, y], setXY] = useState([0, 0]);
@@ -25,37 +24,23 @@ export default function MousePosition() {
   return (
     <div className="wrapper">
       <h2>Where&apos;s Waldo?</h2>
-      <div className="image" onClick={handleClick}>
-        <img
-          src={waldo}
-          onMouseEnter={(e) => {
-            setImgSize([e.target.clientWidth, e.target.clientHeight]);
-            setShowMagnifier(true);
-          }}
-          onMouseMove={(e) => {
-            const x = e.nativeEvent.offsetX;
-            const y = e.nativeEvent.offsetY;
-            setXY([x, y]);
-          }}
-          onMouseLeave={() => {
-            setShowMagnifier(false);
-          }}
-          alt={"img"}
-        />
-        <MagnifyingGlass
-          showMagnifier={showMagnifier}
-          coords={{ x, y }}
-          src={waldo}
-          imgSize={{ w: imgWidth, h: imgHeight }}
-        />
-        <DropDown modal={modal} coords={{ x, y }} handleChange={handleChange} />
-      </div>
-      <div>Offset X Position: {x}</div>
-      <div>Offset Y Position: {y}</div>
-      <div>X Ratio: {xRatio}</div>
-      <div>Y Ratio: {yRatio}</div>
-      <div>Img Width: {imgWidth}</div>
-      <div>Selection: {selection}</div>
+      <BackgroundImg
+        handleClick={handleClick}
+        src={waldo}
+        setImgSize={setImgSize}
+        setShowMagnifier={setShowMagnifier}
+        setXY={setXY}
+        showMagnifier={showMagnifier}
+        x={x}
+        y={y}
+        imgWidth={imgWidth}
+        imgHeight={imgHeight}
+        modal={modal}
+        handleChange={handleChange}
+        xRatio={xRatio}
+        yRatio={yRatio}
+        selection={selection}
+      />
     </div>
   );
 }
