@@ -17,6 +17,8 @@ export default function BackgroundImg({
   xRatio,
   yRatio,
   selection,
+  magnifyingGlass,
+  targetingBox,
 }) {
   return (
     <div className="image" onClick={handleClick}>
@@ -42,8 +44,14 @@ export default function BackgroundImg({
         coords={{ x, y }}
         src={src}
         imgSize={{ w: imgWidth, h: imgHeight }}
+        magnifyingGlass={magnifyingGlass}
       />
-      <DropDown modal={modal} coords={{ x, y }} handleChange={handleChange} />
+      <DropDown
+        modal={modal}
+        coords={{ x, y }}
+        handleChange={handleChange}
+        targetingBox={targetingBox}
+      />
 
       <div className="debugPanel">
         <div>Offset X Position: {x}</div>

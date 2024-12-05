@@ -3,6 +3,7 @@ export default function MagnifyingGlass({
   coords,
   src,
   imgSize,
+  magnifyingGlass,
 }) {
   const [magHeight, magWidth, zoomLevel] = [
     100,
@@ -12,6 +13,7 @@ export default function MagnifyingGlass({
   return (
     <div
       className="magnifyingGlass"
+      ref={magnifyingGlass}
       style={{
         display: showMagnifier ? "" : "none",
         role: "region",

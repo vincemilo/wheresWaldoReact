@@ -9,18 +9,20 @@ export default function MousePosition() {
   const [[xRatio, yRatio], setXYRatio] = useState([0, 0]);
   const modal = useRef(null);
   const [selection, setSelection] = useState(null);
+  const magnifyingGlass = useRef(null);
+  const [targetingBox, setTargetingBox] = useState(null);
 
   const handleClick = (e) => {
+    setTargetingBox(magnifyingGlass.current.attributes);
     setXYRatio([x / imgWidth, y / imgHeight]);
     if (!modal.current.open) modal.current.showModal();
     if (e.target.className === "modal") modal.current.close();
-    if (e.target.className === "option") modal.current.close();
   };
 
   const handleChange = (e) => {
     setSelection(e.target.value);
+    modal.current.close();
   };
-
   return (
     <div className="wrapper">
       <h2>Where&apos;s Waldo?</h2>
@@ -40,6 +42,8 @@ export default function MousePosition() {
         xRatio={xRatio}
         yRatio={yRatio}
         selection={selection}
+        magnifyingGlass={magnifyingGlass}
+        targetingBox={targetingBox}
       />
     </div>
   );

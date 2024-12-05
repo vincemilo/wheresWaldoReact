@@ -3,12 +3,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import BackgroundImg from "../src/components/BackgroundImg";
 
-const positions = {
-  waldo: [0.37, 0.42],
-};
+// const positions = {
+//   waldo: [0.37, 0.42],
+// };
 
 describe("BackgroundImg", () => {
-  const user = userEvent.setup();
   const mockProps = {
     handleClick: vi.fn(),
     src: "test-image.jpg",
@@ -32,8 +31,21 @@ describe("BackgroundImg", () => {
     const image = screen.getByRole("button", {
       name: "Toggle Background",
     });
-
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute("src", "test-image.jpg");
+  });
+
+  it("should call the handleClick function when clicked", async () => {
+    const user = userEvent.setup();
+    let handleClick = vi.fn();
+    render(<BackgroundImg {...mockProps} handleClick={handleClick} />);
+
+    const image = screen.getByRole("button", {
+      name: "Toggle Background",
+    });
+
+    await user.click(image);
+
+    expect(handleClick).toHaveBeenCalled();
   });
 });
