@@ -1,11 +1,4 @@
-import TargetingBox from "./TargetingBox";
-
-export default function DropDown({
-  coords,
-  modal,
-  handleChange,
-  targetingBox,
-}) {
+export default function DropDown({ coords, modal, handleChange }) {
   return (
     <dialog
       ref={modal}
@@ -17,7 +10,6 @@ export default function DropDown({
     >
       <div className="modalDiv">
         Who do you see?
-        <TargetingBox targetingBox={targetingBox} />
         <select onChange={handleChange}>
           <option className="option" value={null}>
             Select:

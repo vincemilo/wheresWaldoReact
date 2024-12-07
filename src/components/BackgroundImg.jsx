@@ -7,18 +7,14 @@ export default function BackgroundImg({
   setImgSize,
   setShowMagnifier,
   setXY,
-  showMagnifier,
   x,
   y,
   imgWidth,
-  imgHeight,
   modal,
   handleChange,
   xRatio,
   yRatio,
   selection,
-  magnifyingGlass,
-  targetingBox,
 }) {
   return (
     <div className="image" onClick={handleClick}>
@@ -39,19 +35,8 @@ export default function BackgroundImg({
           setShowMagnifier(false);
         }}
       />
-      <MagnifyingGlass
-        showMagnifier={showMagnifier}
-        coords={{ x, y }}
-        src={src}
-        imgSize={{ w: imgWidth, h: imgHeight }}
-        magnifyingGlass={magnifyingGlass}
-      />
-      <DropDown
-        modal={modal}
-        coords={{ x, y }}
-        handleChange={handleChange}
-        targetingBox={targetingBox}
-      />
+      <MagnifyingGlass />
+      <DropDown modal={modal} coords={{ x, y }} handleChange={handleChange} />
 
       <div className="debugPanel">
         <div>Offset X Position: {x}</div>
