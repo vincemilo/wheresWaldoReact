@@ -36,7 +36,7 @@ export default function BackgroundImg({
         }}
       />
       <MagnifyingGlass />
-      <DropDown modal={modal} coords={{ x, y }} handleChange={handleChange} />
+      <DropDown modal={modal} handleChange={handleChange} />
 
       <div className="debugPanel">
         <div>Offset X Position: {x}</div>

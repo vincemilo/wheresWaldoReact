@@ -14,15 +14,6 @@ body {
   position: relative;
 }
 
-.targeting-box {
-  display: none;
-  border: 2px solid red;
-  padding: 6px;
-  height: 2%;
-  width: 2%;
-  pointer-events: none;
-}
-
 .active {
   display: block;
   position: absolute;
@@ -37,10 +28,14 @@ img {
 .modalDiv {
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 8px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .modal {
   padding: 0;
   margin: 0;
+  border-radius: 8px;
 }

@@ -7,6 +7,8 @@ export const MagnifierContext = createContext({
   src: null,
   imgSize: {},
   showMagnifier: false,
+  targetingBox: false,
+  magnifierSettings: {},
 });
 
 export default function MousePosition() {
@@ -16,12 +18,19 @@ export default function MousePosition() {
   const [[xRatio, yRatio], setXYRatio] = useState([0, 0]);
   const modal = useRef(null);
   const [selection, setSelection] = useState(null);
+  const [targetingBox, setTargetingBox] = useState(false);
 
   const coords = { x, y };
   const src = waldo;
   const imgSize = { w: imgWidth, h: imgHeight };
+  const magnifierSettings = {
+    magHeight: 100,
+    magWidth: 100,
+    zoomLevel: imgSize.w < 500 ? 4 : imgSize.w > 1000 ? 2 : 3,
+  };
 
   const handleClick = (e) => {
+    setTargetingBox(true);
     setXYRatio([x / imgWidth, y / imgHeight]);
     if (!modal.current.open) modal.current.showModal();
     if (e.target.className === "modal") modal.current.close();
@@ -30,12 +39,20 @@ export default function MousePosition() {
   const handleChange = (e) => {
     setSelection(e.target.value);
     modal.current.close();
+    setTargetingBox(false);
   };
   return (
     <div className="wrapper">
       <h2>Where&apos;s Waldo?</h2>
       <MagnifierContext.Provider
-        value={{ coords, src, imgSize, showMagnifier }}
+        value={{
+          coords,
+          src,
+          imgSize,
+          showMagnifier,
+          targetingBox,
+          magnifierSettings,
+        }}
       >
         <BackgroundImg
           handleClick={handleClick}

@@ -1,16 +1,24 @@
-export default function DropDown({ coords, modal, handleChange }) {
+import { useContext } from "react";
+import TargetingBox from "./TargetingBox";
+import { MagnifierContext } from "./MousePosition";
+
+export default function DropDown({ modal, handleChange }) {
+  const { coords, magnifierSettings } = useContext(MagnifierContext);
+  const { magHeight, magWidth } = magnifierSettings;
+
   return (
     <dialog
       ref={modal}
       className="modal"
       style={{
-        top: `${coords.y}px`,
-        left: `${coords.x}px`,
+        top: `${coords.y - magHeight}px`,
+        left: `${coords.x - magWidth / 10}px`,
       }}
     >
       <div className="modalDiv">
         Who do you see?
-        <select onChange={handleChange}>
+        <TargetingBox />
+        <select id="select" onChange={handleChange}>
           <option className="option" value={null}>
             Select:
           </option>
