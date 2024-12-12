@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import BackgroundImg from "../src/components/BackgroundImg";
 
 // const positions = {
-//   waldo: [0.37, 0.42],
+//   waldo: [0.37, 0.43],
 // };
 
 describe("BackgroundImg", () => {

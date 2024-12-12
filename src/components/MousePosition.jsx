@@ -1,6 +1,7 @@
 import { useRef, useState, createContext } from "react";
 import waldo from "../assets/waldo2.jpg";
 import BackgroundImg from "./BackgroundImg";
+import useFetch from "../useFetch";
 
 export const MagnifierContext = createContext({
   coords: {},
@@ -19,7 +20,7 @@ export default function MousePosition() {
   const modal = useRef(null);
   const [selection, setSelection] = useState(null);
   const [targetingBox, setTargetingBox] = useState(false);
-
+  const { data, loading, error } = useFetch("http://localhost:3000/characters");
   const coords = { x, y };
   const src = waldo;
   const imgSize = { w: imgWidth, h: imgHeight };
@@ -40,6 +41,7 @@ export default function MousePosition() {
     setSelection(e.target.value);
     modal.current.close();
     setTargetingBox(false);
+    console.log(data);
   };
   return (
     <div className="wrapper">

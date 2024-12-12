@@ -11,7 +11,7 @@ export default function DropDown({ modal, handleChange }) {
       ref={modal}
       className="modal"
       style={{
-        top: `${coords.y - magHeight}px`,
+        top: `${coords.y - magHeight / 2}px`,
         left: `${coords.x - magWidth / 10}px`,
       }}
     >
