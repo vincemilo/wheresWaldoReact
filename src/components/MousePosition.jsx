@@ -38,11 +38,32 @@ export default function MousePosition() {
   };
 
   const handleChange = (e) => {
-    setSelection(e.target.value);
     modal.current.close();
     setTargetingBox(false);
-    console.log(data);
+    validateSelection(e.target.value);
   };
+
+  const round = (num) => {
+    return Math.round((num + Number.EPSILON) * 100) / 100;
+  };
+
+  const validateSelection = (target) => {
+    setSelection(target);
+    if (data) {
+      const result = data.find(({ name }) => name === target);
+      if (
+        Number(result.x_ratio) === round(xRatio) &&
+        Number(result.y_ratio) === round(yRatio)
+      ) {
+        console.log("success");
+      } else {
+        console.log(typeof round(xRatio));
+        console.log(typeof result.x_ratio);
+        console.log("fail");
+      }
+    }
+  };
+
   return (
     <div className="wrapper">
       <h2>Where&apos;s Waldo?</h2>
@@ -62,18 +83,18 @@ export default function MousePosition() {
           setImgSize={setImgSize}
           setShowMagnifier={setShowMagnifier}
           setXY={setXY}
-          showMagnifier={showMagnifier}
-          x={x}
-          y={y}
-          imgWidth={imgWidth}
-          imgHeight={imgHeight}
           modal={modal}
           handleChange={handleChange}
-          xRatio={xRatio}
-          yRatio={yRatio}
-          selection={selection}
         />
       </MagnifierContext.Provider>
+      <div className="debugPanel">
+        <div>Offset X Position: {x}</div>
+        <div>Offset Y Position: {y}</div>
+        <div>X Ratio: {xRatio}</div>
+        <div>Y Ratio: {yRatio}</div>
+        <div>Img Width: {imgWidth}</div>
+        <div>Selection: {selection}</div>
+      </div>
     </div>
   );
 }

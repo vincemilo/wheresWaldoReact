@@ -7,14 +7,8 @@ export default function BackgroundImg({
   setImgSize,
   setShowMagnifier,
   setXY,
-  x,
-  y,
-  imgWidth,
   modal,
   handleChange,
-  xRatio,
-  yRatio,
-  selection,
 }) {
   return (
     <div className="image" onClick={handleClick}>
@@ -37,15 +31,6 @@ export default function BackgroundImg({
       />
       <MagnifyingGlass />
       <DropDown modal={modal} handleChange={handleChange} />
-
-      <div className="debugPanel">
-        <div>Offset X Position: {x}</div>
-        <div>Offset Y Position: {y}</div>
-        <div>X Ratio: {xRatio}</div>
-        <div>Y Ratio: {yRatio}</div>
-        <div>Img Width: {imgWidth}</div>
-        <div>Selection: {selection}</div>
-      </div>
     </div>
   );
 }
