@@ -3,9 +3,8 @@ import TargetingBox from "./TargetingBox";
 import { MagnifierContext } from "./MousePosition";
 
 export default function DropDown({ modal, handleChange }) {
-  const { coords, magnifierSettings } = useContext(MagnifierContext);
+  const { coords, magnifierSettings, selection } = useContext(MagnifierContext);
   const { magHeight, magWidth } = magnifierSettings;
-
   return (
     <dialog
       ref={modal}
@@ -18,7 +17,7 @@ export default function DropDown({ modal, handleChange }) {
       <div className="modalDiv">
         Who do you see?
         <TargetingBox />
-        <select id="select" onChange={handleChange}>
+        <select id="select" onChange={handleChange} value={selection}>
           <option className="option" value={null}>
             Select:
           </option>

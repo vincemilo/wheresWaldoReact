@@ -10,6 +10,7 @@ export const MagnifierContext = createContext({
   showMagnifier: false,
   targetingBox: false,
   magnifierSettings: {},
+  selection: "",
 });
 
 export default function MousePosition() {
@@ -18,7 +19,7 @@ export default function MousePosition() {
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [[xRatio, yRatio], setXYRatio] = useState([0, 0]);
   const modal = useRef(null);
-  const [selection, setSelection] = useState(null);
+  const [selection, setSelection] = useState("");
   const [targetingBox, setTargetingBox] = useState(false);
   const { data, loading, error } = useFetch("http://localhost:3000/characters");
   const coords = { x, y };
@@ -34,11 +35,11 @@ export default function MousePosition() {
     setTargetingBox(true);
     setXYRatio([x / imgWidth, y / imgHeight]);
     if (!modal.current.open) modal.current.showModal();
-    if (e.target.className === "modal") modal.current.close();
+    if (e.target.className === "modal" || e.target.className === "option")
+      modal.current.close();
   };
 
   const handleChange = (e) => {
-    modal.current.close();
     setTargetingBox(false);
     validateSelection(e.target.value);
   };
@@ -57,11 +58,10 @@ export default function MousePosition() {
       ) {
         console.log("success");
       } else {
-        console.log(typeof round(xRatio));
-        console.log(typeof result.x_ratio);
         console.log("fail");
       }
     }
+    setSelection("");
   };
 
   return (
@@ -75,6 +75,7 @@ export default function MousePosition() {
           showMagnifier,
           targetingBox,
           magnifierSettings,
+          selection,
         }}
       >
         <BackgroundImg
