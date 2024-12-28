@@ -3,7 +3,8 @@ import TargetingBox from "./TargetingBox";
 import { MagnifierContext } from "./MousePosition";
 
 export default function DropDown({ modal, handleChange }) {
-  const { coords, magnifierSettings, selection } = useContext(MagnifierContext);
+  const { coords, magnifierSettings, selection, characters } =
+    useContext(MagnifierContext);
   const { magHeight, magWidth } = magnifierSettings;
   return (
     <dialog
@@ -21,18 +22,17 @@ export default function DropDown({ modal, handleChange }) {
           <option className="option" value={null}>
             Select:
           </option>
-          <option className="option" value="waldo">
-            Waldo
-          </option>
-          <option className="option" value="wilma">
-            Wilma
-          </option>
-          <option className="option" value="wizard">
-            The Wizard
-          </option>
-          <option className="option" value="odlaw">
-            Odlaw
-          </option>
+          {characters.map((character) => {
+            return (
+              <option
+                key={character.value}
+                className="option"
+                value={character.value}
+              >
+                {character.name}
+              </option>
+            );
+          })}
         </select>
       </div>
     </dialog>

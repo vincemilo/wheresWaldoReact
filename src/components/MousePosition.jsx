@@ -11,6 +11,7 @@ export const MagnifierContext = createContext({
   targetingBox: false,
   magnifierSettings: {},
   selection: "",
+  characters: [],
 });
 
 export default function MousePosition() {
@@ -22,6 +23,13 @@ export default function MousePosition() {
   const [selection, setSelection] = useState("");
   const [targetingBox, setTargetingBox] = useState(false);
   const { data, loading, error } = useFetch("http://localhost:3000/characters");
+  const [characters, setCharacters] = useState([
+    { name: "Waldo", value: "waldo" },
+    { name: "Wilma", value: "wilma" },
+    { name: "The Wizard", value: "wizard" },
+    { name: "Odlaw", value: "odlaw" },
+  ]);
+
   const coords = { x, y };
   const src = waldo;
   const imgSize = { w: imgWidth, h: imgHeight };
@@ -53,17 +61,22 @@ export default function MousePosition() {
     if (data) {
       const result = data.find(({ name }) => name === target);
       if (
-        Number(result.x_ratio) === round(xRatio) &&
-        Number(result.y_ratio) === round(yRatio)
+        //check if less than 0.02 difference in pixel ratio
+        round(result.x_ratio - xRatio) <= Math.abs(0.02) &&
+        round(result.y_ratio - yRatio) <= Math.abs(0.02)
       ) {
-        console.log("success");
+        setCharacters(
+          characters.filter((character) => character.value !== target)
+        );
       } else {
         console.log("fail");
       }
     }
+    modal.current.close();
     setSelection("");
   };
-
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>A network error was encountered</p>;
   return (
     <div className="wrapper">
       <h2>Where&apos;s Waldo?</h2>
@@ -76,6 +89,7 @@ export default function MousePosition() {
           targetingBox,
           magnifierSettings,
           selection,
+          characters,
         }}
       >
         <BackgroundImg
