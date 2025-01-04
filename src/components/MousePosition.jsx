@@ -29,6 +29,7 @@ export default function MousePosition() {
     { name: "The Wizard", value: "wizard" },
     { name: "Odlaw", value: "odlaw" },
   ]);
+  const [correctCoords, setCorrectCoords] = useState([]);
 
   const coords = { x, y };
   const src = waldo;
@@ -68,6 +69,7 @@ export default function MousePosition() {
         setCharacters(
           characters.filter((character) => character.value !== target)
         );
+        setCorrectCoords([...correctCoords, [xRatio, yRatio]]);
       } else {
         console.log("fail");
       }
@@ -100,6 +102,7 @@ export default function MousePosition() {
           setXY={setXY}
           modal={modal}
           handleChange={handleChange}
+          correctCoords={correctCoords}
         />
       </MagnifierContext.Provider>
       <div className="debugPanel">
@@ -110,6 +113,14 @@ export default function MousePosition() {
         <div>Img Width: {imgWidth}</div>
         <div>Selection: {selection}</div>
       </div>
+      <p>
+        <a
+          href="https://www.flaticon.com/free-icons/foursquare-check-in"
+          title="foursquare check in icons"
+        >
+          Foursquare check in icons created by hqrloveq - Flaticon
+        </a>
+      </p>
     </div>
   );
 }

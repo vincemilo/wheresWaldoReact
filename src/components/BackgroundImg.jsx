@@ -1,5 +1,6 @@
 import MagnifyingGlass from "./MagnifyingGlass";
 import DropDown from "./DropDown";
+import Checkmark from "./Checkmark";
 
 export default function BackgroundImg({
   handleClick,
@@ -9,6 +10,7 @@ export default function BackgroundImg({
   setXY,
   modal,
   handleChange,
+  correctCoords,
 }) {
   return (
     <div className="image" onClick={handleClick}>
@@ -31,6 +33,10 @@ export default function BackgroundImg({
       />
       <MagnifyingGlass />
       <DropDown modal={modal} handleChange={handleChange} />
+      {correctCoords.map((coords) => {
+        console.log(coords);
+        return <Checkmark key={coords} coords={coords} />;
+      })}
     </div>
   );
 }
