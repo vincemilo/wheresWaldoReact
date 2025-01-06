@@ -4,20 +4,23 @@ import { MagnifierContext } from "./MousePosition";
 
 export default function Checkmark(coords) {
   console.log(coords);
-  const { magnifierSettings } = useContext(MagnifierContext);
+  const { magnifierSettings, imgSize } = useContext(MagnifierContext);
   const { magHeight, magWidth } = magnifierSettings;
   return (
     <div
       className="checkmark"
       style={{
-        top: `${coords.y - magHeight / 2}px`,
-        left: `${coords.x - magWidth / 10}px`,
+        top: `${imgSize.h}px`,
+        left: `${imgSize.w}px`,
         position: "absolute",
       }}
     >
       <img
         src={checkmark}
-        style={{ height: `${magHeight}px`, width: `${magWidth}px` }}
+        style={{
+          height: `${magHeight / 2}px`,
+          width: `${magWidth / 2}px`,
+        }}
       />
     </div>
   );

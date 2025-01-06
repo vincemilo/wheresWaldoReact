@@ -3,16 +3,14 @@ import TargetingBox from "./TargetingBox";
 import { MagnifierContext } from "./MousePosition";
 
 export default function DropDown({ modal, handleChange }) {
-  const { coords, magnifierSettings, selection, characters } =
-    useContext(MagnifierContext);
-  const { magHeight, magWidth } = magnifierSettings;
+  const { selection, characters, clientXY } = useContext(MagnifierContext);
   return (
     <dialog
       ref={modal}
       className="modal"
       style={{
-        top: `${coords.y - magHeight / 2}px`,
-        left: `${coords.x - magWidth / 10}px`,
+        top: `${clientXY.clientY * 0.8}px`,
+        left: `${clientXY.clientX * 0.8}px`,
       }}
     >
       <div className="modalDiv">

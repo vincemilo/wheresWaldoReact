@@ -12,6 +12,7 @@ export const MagnifierContext = createContext({
   magnifierSettings: {},
   selection: "",
   characters: [],
+  clientXY: {},
 });
 
 export default function MousePosition() {
@@ -30,6 +31,7 @@ export default function MousePosition() {
     { name: "Odlaw", value: "odlaw" },
   ]);
   const [correctCoords, setCorrectCoords] = useState([]);
+  const [[clientX, clientY], setClientXY] = useState([0, 0]);
 
   const coords = { x, y };
   const src = waldo;
@@ -39,8 +41,10 @@ export default function MousePosition() {
     magWidth: 100,
     zoomLevel: imgSize.w < 500 ? 4 : imgSize.w > 1000 ? 2 : 3,
   };
+  const clientXY = { clientX, clientY };
 
   const handleClick = (e) => {
+    if (e.target.id != "select") setClientXY([e.clientX, e.clientY]);
     setTargetingBox(true);
     setXYRatio([x / imgWidth, y / imgHeight]);
     if (!modal.current.open) modal.current.showModal();
@@ -92,6 +96,7 @@ export default function MousePosition() {
           magnifierSettings,
           selection,
           characters,
+          clientXY,
         }}
       >
         <BackgroundImg
@@ -112,6 +117,8 @@ export default function MousePosition() {
         <div>Y Ratio: {yRatio}</div>
         <div>Img Width: {imgWidth}</div>
         <div>Selection: {selection}</div>
+        <div>ClientX: {clientX}</div>
+        <div>ClientY: {clientY}</div>
       </div>
       <p>
         <a

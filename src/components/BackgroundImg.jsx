@@ -34,7 +34,6 @@ export default function BackgroundImg({
       <MagnifyingGlass />
       <DropDown modal={modal} handleChange={handleChange} />
       {correctCoords.map((coords) => {
-        console.log(coords);
         return <Checkmark key={coords} coords={coords} />;
       })}
     </div>
