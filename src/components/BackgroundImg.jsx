@@ -16,6 +16,7 @@ export default function BackgroundImg({
     <div className="image" onClick={handleClick}>
       <img
         src={src}
+        className="background"
         alt="Toggle Background"
         role="button"
         onMouseEnter={(e) => {
@@ -34,7 +35,7 @@ export default function BackgroundImg({
       <MagnifyingGlass />
       <DropDown modal={modal} handleChange={handleChange} />
       {correctCoords.map((coords) => {
-        return <Checkmark key={coords} coords={coords} />;
+        return <Checkmark key={coords[0]} coords={coords} />;
       })}
     </div>
   );

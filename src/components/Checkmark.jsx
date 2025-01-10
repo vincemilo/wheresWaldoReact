@@ -2,24 +2,22 @@ import checkmark from "../assets/check.png";
 import { useContext } from "react";
 import { MagnifierContext } from "./MousePosition";
 
-export default function Checkmark(coords) {
-  console.log(coords);
-  const { magnifierSettings, imgSize } = useContext(MagnifierContext);
-  const { magHeight, magWidth } = magnifierSettings;
+export default function Checkmark({ coords }) {
+  const { imgSize } = useContext(MagnifierContext);
   return (
     <div
       className="checkmark"
       style={{
-        top: `${imgSize.h}px`,
-        left: `${imgSize.w}px`,
+        top: `${coords[1] * 99}%`,
+        left: `${coords[0] * 99}%`,
         position: "absolute",
       }}
     >
       <img
         src={checkmark}
         style={{
-          height: `${magHeight / 2}px`,
-          width: `${magWidth / 2}px`,
+          height: `${imgSize.h / 45}px`,
+          width: `${imgSize.w / 45}px`,
         }}
       />
     </div>
