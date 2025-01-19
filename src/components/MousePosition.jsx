@@ -15,7 +15,7 @@ export const MagnifierContext = createContext({
   clientXY: {},
 });
 
-export default function MousePosition() {
+export default function MousePosition({ setGameOver }) {
   const [[x, y], setXY] = useState([0, 0]);
   const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);
   const [showMagnifier, setShowMagnifier] = useState(false);
@@ -84,8 +84,7 @@ export default function MousePosition() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>A network error was encountered</p>;
   return (
-    <div className="wrapper">
-      <h2>Where&apos;s Waldo?</h2>
+    <>
       <MagnifierContext.Provider
         value={{
           coords,
@@ -110,7 +109,8 @@ export default function MousePosition() {
           correctCoords={correctCoords}
         />
       </MagnifierContext.Provider>
-      <div className="debugPanel">
+      {/* Debug panel for testing */}
+      {/* <div className="debugPanel">
         <div>Offset X Position: {x}</div>
         <div>Offset Y Position: {y}</div>
         <div>X Ratio: {xRatio}</div>
@@ -120,15 +120,15 @@ export default function MousePosition() {
         <div>Selection: {selection}</div>
         <div>ClientX: {clientX}</div>
         <div>ClientY: {clientY}</div>
-      </div>
-      <p>
+      </div> */}
+      {/* <p>
         <a
           href="https://www.flaticon.com/free-icons/foursquare-check-in"
           title="foursquare check in icons"
         >
           Foursquare check in icons created by hqrloveq - Flaticon
         </a>
-      </p>
-    </div>
+      </p> */}
+    </>
   );
 }
