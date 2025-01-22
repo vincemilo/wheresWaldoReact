@@ -13,8 +13,11 @@ function App() {
       // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
       intervalId = setInterval(() => setTime(time + 1), 10);
     }
+    if (gameOver) {
+      clearInterval(intervalId);
+    }
     return () => clearInterval(intervalId);
-  }, [playState, time]);
+  }, [playState, time, gameOver]);
 
   const handleClick = () => {
     setPlayState(true);
@@ -26,11 +29,12 @@ function App() {
       {!playState ? (
         <button onClick={handleClick}>Play</button>
       ) : gameOver ? (
-        <>Game over!</>
+        <div>
+          Game over! Your time was: <Timer time={time} />
+        </div>
       ) : (
         <>
-          <MousePosition setGameOver={setGameOver} />
-          <Timer time={time} />
+          <MousePosition setGameOver={setGameOver} time={time} />
         </>
       )}
     </div>
