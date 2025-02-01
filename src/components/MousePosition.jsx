@@ -16,7 +16,7 @@ export const MagnifierContext = createContext({
   clientXY: {},
 });
 
-export default function MousePosition({ setGameOver, time }) {
+export default function MousePosition({ setGameOver, time, endGame }) {
   const [[x, y], setXY] = useState([0, 0]);
   const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);
   const [showMagnifier, setShowMagnifier] = useState(false);
@@ -27,16 +27,19 @@ export default function MousePosition({ setGameOver, time }) {
   const { data, loading, error } = useFetch("http://localhost:3000/characters");
   const [characters, setCharacters] = useState([
     { name: "Waldo", value: "waldo" },
-    { name: "Wilma", value: "wilma" },
-    { name: "The Wizard", value: "wizard" },
-    { name: "Odlaw", value: "odlaw" },
+    // { name: "Wilma", value: "wilma" },
+    // { name: "The Wizard", value: "wizard" },
+    // { name: "Odlaw", value: "odlaw" },
   ]);
   const [correctCoords, setCorrectCoords] = useState([]);
   const [[clientX, clientY], setClientXY] = useState([0, 0]);
 
   useEffect(() => {
-    if (characters.length === 0) setGameOver(true);
-  }, [characters, setGameOver]);
+    if (characters.length === 0) {
+      setGameOver(true);
+      endGame();
+    }
+  }, [characters, setGameOver, endGame]);
 
   const coords = { x, y };
   const src = waldo;
@@ -87,7 +90,13 @@ export default function MousePosition({ setGameOver, time }) {
     setSelection("");
   };
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>A network error was encountered</p>;
+  if (error)
+    return (
+      <p>
+        A network error was encountered{" "}
+        <button onClick={location.reload()}>Try again</button>
+      </p>
+    );
   return (
     <>
       <MagnifierContext.Provider
