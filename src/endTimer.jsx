@@ -1,21 +1,20 @@
-const endTimer = async (url, timerId, setElapsedTime) => {
-  let result = url;
+const endTimer = async (url, timerId) => {
   try {
-    const response = await fetch(result + "/" + timerId, {
+    const response = await fetch(`${url}/${timerId}`, {
       mode: "cors",
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
     });
-    if (response.status >= 400) {
-      throw new Error("Failed to update time");
+    if (!response.ok) {
+      throw new Error(`Failed to update time: ${response.statusText}`);
     }
     const data = await response.json();
-    setElapsedTime(data.elapsed_time);
-    return data;
+    return { data, error: null };
   } catch (error) {
-    console.log(error);
+    console.log("Error in endTimer:", error);
+    return { data: null, error: error.message };
   }
 };
 
