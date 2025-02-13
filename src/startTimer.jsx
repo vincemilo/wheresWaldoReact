@@ -1,5 +1,5 @@
-const startTimer = async (setTimerId) => {
-  let result = "http://localhost:3000/timers";
+const startTimer = async (url, setTimerId, setStartTime) => {
+  let result = url;
   try {
     const response = await fetch(result, {
       mode: "cors",
@@ -10,7 +10,8 @@ const startTimer = async (setTimerId) => {
       throw new Error("server error");
     }
     const data = await response.json();
-    setTimerId(data.timer_id);
+    setTimerId(data.id);
+    setStartTime(new Date() - new Date(data.start_time));
     return data;
   } catch (error) {
     console.log(error);

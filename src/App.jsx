@@ -7,25 +7,26 @@ import endTimer from "./endTimer";
 function App() {
   const [playState, setPlayState] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [time, setTime] = useState(0);
+  const [startTime, setStartTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [timerId, setTimerId] = useState(null);
+  const timerUrl = "http://localhost:3000/timers";
 
   useEffect(() => {
     let intervalId;
     if (playState && !gameOver) {
-      // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
-      intervalId = setInterval(() => setTime(time + 1), 10);
+      intervalId = setInterval(() => setStartTime(startTime + 1), 10);
     }
     return () => clearInterval(intervalId);
-  }, [playState, time, gameOver]);
+  }, [playState, startTime, gameOver]);
 
   const handleClick = () => {
     setPlayState(true);
-    startTimer(setTimerId, setTime);
+    startTimer(timerUrl, setTimerId, setStartTime);
   };
 
   const endGame = () => {
-    endTimer(timerId);
+    endTimer(timerUrl, timerId, setElapsedTime);
   };
 
   return (
@@ -35,17 +36,15 @@ function App() {
         <button onClick={handleClick}>Play</button>
       ) : gameOver ? (
         <div>
-          Game over! Your time was: <Timer time={time} />
-          <div>{time}</div>
+          Game over! Your time was: <Timer time={elapsedTime} />
         </div>
       ) : (
         <>
           <MousePosition
             setGameOver={setGameOver}
-            time={time}
+            time={startTime}
             endGame={endGame}
           />
-          <div>{timerId}</div>
         </>
       )}
     </div>

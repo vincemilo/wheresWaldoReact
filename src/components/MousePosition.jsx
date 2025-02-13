@@ -93,8 +93,8 @@ export default function MousePosition({ setGameOver, time, endGame }) {
   if (error)
     return (
       <p>
-        A network error was encountered{" "}
-        <button onClick={location.reload()}>Try again</button>
+        A network error was encountered.{" "}
+        <button onClick={() => location.reload()}>Refresh</button>
       </p>
     );
   return (
