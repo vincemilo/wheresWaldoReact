@@ -1,39 +1,56 @@
 import MousePosition from "./components/MousePosition";
 import { useState, useEffect } from "react";
 import Timer from "./components/Timer";
-import startTimer from "./startTimer";
-import endTimer from "./endTimer";
 import NetworkError from "./components/NetworkError";
+import useFetch from "./useFetch";
 
 function App() {
   const [playState, setPlayState] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [startTime, setStartTime] = useState(null);
+  const [startTime, setStartTime] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [timerId, setTimerId] = useState(null);
-  const [serverError, setServerError] = useState(false);
-  const timerUrl = "http://localhost:3000/timers";
+
+  const {
+    data: startData,
+    error: startError,
+    loading: startLoading,
+  } = useFetch(playState ? "http://localhost:3000/timers" : null, {
+    method: "POST",
+  });
+
+  const {
+    data: endData,
+    error: endError,
+    loading: endLoading,
+  } = useFetch(gameOver ? `http://localhost:3000/timers/${timerId}` : null, {
+    method: "DELETE",
+  });
 
   useEffect(() => {
     let intervalId;
     if (playState && !gameOver) {
-      intervalId = setInterval(() => setStartTime(startTime + 1), 10);
+      intervalId = setInterval(() => {
+        setStartTime((prevTime) => prevTime + 1); // Use functional update
+      }, 10);
     }
-    return () => clearInterval(intervalId);
-  }, [playState, startTime, gameOver]);
+    return () => clearInterval(intervalId); // Cleanup interval
+  }, [playState, gameOver]);
 
-  const handleClick = async () => {
+  useEffect(() => {
+    if (playState && startData) {
+      setTimerId(startData.id);
+    }
+  }, [playState, startData]);
+
+  useEffect(() => {
+    if (gameOver && endData) {
+      setElapsedTime(endData.elapsed_time);
+    }
+  }, [gameOver, endData]);
+
+  const handleClick = () => {
     setPlayState(true);
-    const { data, error } = await startTimer(timerUrl, setTimerId);
-    error
-      ? setServerError(true)
-      : setTimerId(data.id) &&
-        setStartTime(new Date() - new Date(data.start_time));
-  };
-
-  const endGame = async () => {
-    const { data, error } = await endTimer(timerUrl, timerId);
-    error ? setServerError(true) : setElapsedTime(data.elapsed_time);
   };
 
   return (
@@ -41,19 +58,19 @@ function App() {
       <h2>Where&apos;s Waldo?</h2>
       {!playState ? (
         <button onClick={handleClick}>Play</button>
-      ) : serverError ? (
+      ) : startError || endError ? (
         <NetworkError />
+      ) : startLoading || (gameOver && endLoading) ? (
+        <p>Loading...</p>
       ) : gameOver ? (
         <div>
           Game over! Your time was: <Timer time={elapsedTime} />
+          {startTime}
         </div>
       ) : (
         <>
-          <MousePosition
-            setGameOver={setGameOver}
-            time={startTime}
-            endGame={endGame}
-          />
+          <MousePosition setGameOver={setGameOver} time={startTime} />
+          {timerId}
         </>
       )}
     </div>

@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
 
-export default function useFetch(url) {
+export default function useFetch(url, options = {}) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!url) return;
+
     const fetchData = async () => {
-      let result = url;
       try {
-        const response = await fetch(result, { mode: "cors" });
-        if (response.status >= 400) {
-          throw new Error("server error");
+        const response = await fetch(url, {
+          ...options,
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            `${response.status} ${response.statusText}: ${
+              errorData?.message || "Request failed"
+            }`
+          );
         }
         const data = await response.json();
         setData(data);
@@ -22,7 +32,7 @@ export default function useFetch(url) {
       }
     };
     fetchData();
-  }, [url]);
+  }, [url, JSON.stringify(options)]);
 
   return { data, error, loading };
 }

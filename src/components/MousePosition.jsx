@@ -16,7 +16,7 @@ export const MagnifierContext = createContext({
   clientXY: {},
 });
 
-export default function MousePosition({ setGameOver, time, endGame }) {
+export default function MousePosition({ setGameOver, time }) {
   const [[x, y], setXY] = useState([0, 0]);
   const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);
   const [showMagnifier, setShowMagnifier] = useState(false);
@@ -37,9 +37,8 @@ export default function MousePosition({ setGameOver, time, endGame }) {
   useEffect(() => {
     if (characters.length === 0) {
       setGameOver(true);
-      endGame();
     }
-  }, [characters, setGameOver, endGame]);
+  }, [characters, setGameOver]);
 
   const coords = { x, y };
   const src = waldo;
