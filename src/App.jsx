@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Timer from "./components/Timer";
 import NetworkError from "./components/NetworkError";
 import useFetch from "./useFetch";
+import HighScore from "./components/HighScore";
 
 function App() {
   const [playState, setPlayState] = useState(false);
@@ -10,6 +11,10 @@ function App() {
   const [startTime, setStartTime] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [timerId, setTimerId] = useState(null);
+  const [highestScore, setHighestScore] = useState(null);
+  const [submitState, setSubmitState] = useState(false);
+  const [name, setName] = useState("");
+  const [refreshKey, setRefreshKey] = useState(Date.now());
 
   const {
     data: startData,
@@ -31,7 +36,19 @@ function App() {
     data: highScoreData,
     error: highScoreError,
     loading: highScoreLoading,
-  } = useFetch(gameOver ? "http://localhost:3000/high_scores" : null);
+  } = useFetch(
+    gameOver ? `http://localhost:3000/high_scores?t=${refreshKey}` : null,
+    { method: "GET" }
+  );
+
+  const {
+    data: highScorePostData,
+    error: highScorePostError,
+    loading: highScorePostLoading,
+  } = useFetch(submitState ? "http://localhost:3000/high_scores" : null, {
+    method: "POST",
+    body: JSON.stringify({ name: name, time: elapsedTime }), // maybe use timerId to look up the record via server to avoids meddling from client
+  });
 
   useEffect(() => {
     let intervalId;
@@ -55,8 +72,27 @@ function App() {
     }
   }, [gameOver, endData]);
 
+  useEffect(() => {
+    if (gameOver && highScoreData) {
+      const highScore = highScoreData.sort((a, b) => a.time - b.time);
+      setHighestScore(highScore[highScoreData.length - 1].time);
+    }
+  }, [gameOver, highScoreData]);
+
+  useEffect(() => {
+    // refresh list after successful post
+    if (highScorePostData) {
+      setRefreshKey(Date.now());
+    }
+  }, [highScorePostData]);
+
   const handleClick = () => {
     setPlayState(true);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    !name ? null : setSubmitState(true);
   };
 
   return (
@@ -64,20 +100,33 @@ function App() {
       <h2>Where&apos;s Waldo?</h2>
       {!playState ? (
         <button onClick={handleClick}>Play</button>
-      ) : startError || endError || highScoreError ? (
+      ) : startError || endError || highScoreError || highScorePostError ? (
         <NetworkError />
       ) : startLoading ||
         (gameOver && endLoading) ||
-        (gameOver && highScoreLoading) ? (
+        (gameOver && highScoreLoading) ||
+        (submitState && highScorePostLoading) ? (
         <p>Loading...</p>
       ) : gameOver ? (
         <div>
           Game over! Your time was: <Timer time={elapsedTime} />
+          {elapsedTime < highestScore && !submitState ? (
+            <>
+              <div>Congratulations! You made the top ten!</div>
+              <form onSubmit={handleSubmit}>
+                Please enter your name:{" "}
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <button type="submit">Submit</button>
+              </form>
+            </>
+          ) : null}
           <ul>
             <h3>High Scores:</h3>
-            {highScoreData.map((entry) => {
-              return <li key={entry.id}>{entry.name + " " + entry.time}</li>;
-            })}
+            <HighScore highScoreData={highScoreData} />
           </ul>
         </div>
       ) : (
