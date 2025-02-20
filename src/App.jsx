@@ -27,14 +27,20 @@ function App() {
     method: "DELETE",
   });
 
+  const {
+    data: highScoreData,
+    error: highScoreError,
+    loading: highScoreLoading,
+  } = useFetch(gameOver ? "http://localhost:3000/high_scores" : null);
+
   useEffect(() => {
     let intervalId;
     if (playState && !gameOver) {
       intervalId = setInterval(() => {
-        setStartTime((prevTime) => prevTime + 1); // Use functional update
+        setStartTime((prevTime) => prevTime + 1);
       }, 10);
     }
-    return () => clearInterval(intervalId); // Cleanup interval
+    return () => clearInterval(intervalId);
   }, [playState, gameOver]);
 
   useEffect(() => {
@@ -58,14 +64,21 @@ function App() {
       <h2>Where&apos;s Waldo?</h2>
       {!playState ? (
         <button onClick={handleClick}>Play</button>
-      ) : startError || endError ? (
+      ) : startError || endError || highScoreError ? (
         <NetworkError />
-      ) : startLoading || (gameOver && endLoading) ? (
+      ) : startLoading ||
+        (gameOver && endLoading) ||
+        (gameOver && highScoreLoading) ? (
         <p>Loading...</p>
       ) : gameOver ? (
         <div>
           Game over! Your time was: <Timer time={elapsedTime} />
-          {startTime}
+          <ul>
+            <h3>High Scores:</h3>
+            {highScoreData.map((entry) => {
+              return <li key={entry.id}>{entry.name + " " + entry.time}</li>;
+            })}
+          </ul>
         </div>
       ) : (
         <>
