@@ -14,13 +14,13 @@ function App() {
   const [highestScore, setHighestScore] = useState(null);
   const [submitState, setSubmitState] = useState(false);
   const [name, setName] = useState("");
-  const [refreshKey, setRefreshKey] = useState(Date.now());
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const {
     data: startData,
     error: startError,
     loading: startLoading,
-  } = useFetch(playState ? "http://localhost:3000/timers" : null, {
+  } = useFetch(playState && !gameOver ? "http://localhost:3000/timers" : null, {
     method: "POST",
   });
 
@@ -28,9 +28,12 @@ function App() {
     data: endData,
     error: endError,
     loading: endLoading,
-  } = useFetch(gameOver ? `http://localhost:3000/timers/${timerId}` : null, {
-    method: "DELETE",
-  });
+  } = useFetch(
+    gameOver && !elapsedTime ? `http://localhost:3000/timers/${timerId}` : null,
+    {
+      method: "PATCH",
+    }
+  );
 
   const {
     data: highScoreData,
@@ -45,10 +48,13 @@ function App() {
     data: highScorePostData,
     error: highScorePostError,
     loading: highScorePostLoading,
-  } = useFetch(submitState ? "http://localhost:3000/high_scores" : null, {
-    method: "POST",
-    body: JSON.stringify({ name: name, time: elapsedTime }), // maybe use timerId to look up the record via server to avoids meddling from client
-  });
+  } = useFetch(
+    submitState && !refreshKey ? "http://localhost:3000/high_scores" : null,
+    {
+      method: "POST",
+      body: JSON.stringify({ name: name, time: elapsedTime }), // maybe use timerId to look up the record via server to avoids meddling from client
+    }
+  );
 
   useEffect(() => {
     let intervalId;
@@ -82,7 +88,7 @@ function App() {
   useEffect(() => {
     // refresh list after successful post
     if (highScorePostData) {
-      setRefreshKey(Date.now());
+      setRefreshKey((prev) => prev + 1);
     }
   }, [highScorePostData]);
 
@@ -108,31 +114,33 @@ function App() {
         (submitState && highScorePostLoading) ? (
         <p>Loading...</p>
       ) : gameOver ? (
-        <div>
-          Game over! Your time was: <Timer time={elapsedTime} />
+        <div className="game-over">
+          <h3>Game over!</h3>
+          <div className="final-time">
+            <p>Your time was:</p> <Timer time={elapsedTime} />
+          </div>
           {elapsedTime < highestScore && !submitState ? (
-            <>
-              <div>Congratulations! You made the top ten!</div>
-              <form onSubmit={handleSubmit}>
-                Please enter your name:{" "}
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <button type="submit">Submit</button>
-              </form>
-            </>
+            <form className="input-field" onSubmit={handleSubmit}>
+              <p>Congratulations!</p>
+              <p>You made the top ten!</p>
+              <p>Please enter your name: </p>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <button type="submit">Submit</button>
+            </form>
           ) : null}
-          <ul>
+          <div className="high-scores">
             <h3>High Scores:</h3>
-            <HighScore highScoreData={highScoreData} />
-          </ul>
+            <HighScore highScoreData={highScoreData} name={name} />
+          </div>
+          <button onClick={() => location.reload()}>Play again?</button>
         </div>
       ) : (
         <>
           <MousePosition setGameOver={setGameOver} time={startTime} />
-          {timerId}
         </>
       )}
     </div>

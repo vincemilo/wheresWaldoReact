@@ -1,6 +1,20 @@
 body {
-  margin: 0;
-  padding: 0;
+  margin-top: 2vh;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: 600;
+  background: repeating-linear-gradient(
+    45deg,
+    white,
+    white 10px,
+    rgb(255, 225, 225) 10px,
+    rgb(253, 200, 200) 20px
+  );
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
 }
 
 .wrapper {
@@ -8,6 +22,12 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: white;
+  border: black solid 2px;
+  border-radius: 4px;
+  min-width: 50vw;
+  padding: 0 2vw;
+  padding-bottom: 2vw;
 }
 
 .image {
@@ -43,4 +63,70 @@ body {
 .checkmark img {
   border: 2px solid white;
   border-radius: 24px;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 16px;
+  flex-wrap: wrap;
+}
+
+.new {
+  background-color: black;
+  color: white;
+  border-radius: 8px;
+  padding: 0 8px;
+}
+
+.game-over,
+.input-field,
+.high-scores {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.final-time {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 8px;
+}
+
+input {
+  border-radius: 4px;
+  margin: 4px 0;
+  margin-bottom: 12px;
+  width: 100%;
+  padding: 12px 20px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  background-color: #af4c4c;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #7e3636;
+}
+
+h3 {
+  margin: 0;
+  margin-top: 8px;
+}
+
+.high-scores {
+  padding: 0 16px;
 }
