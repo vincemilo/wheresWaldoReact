@@ -115,7 +115,7 @@ function App() {
         <p>Loading...</p>
       ) : gameOver ? (
         <div className="game-over">
-          <h3>Game over!</h3>
+          <h3 className="game-over-text">Game over!</h3>
           <div className="final-time">
             <p>Your time was:</p> <Timer time={elapsedTime} />
           </div>
