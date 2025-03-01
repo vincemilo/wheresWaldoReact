@@ -1,9 +1,10 @@
 import MousePosition from "./components/MousePosition";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Timer from "./components/Timer";
 import NetworkError from "./components/NetworkError";
 import useFetch from "./useFetch";
 import HighScore from "./components/HighScore";
+import NameInput from "./components/NameInput";
 
 function App() {
   const [playState, setPlayState] = useState(false);
@@ -15,6 +16,7 @@ function App() {
   const [submitState, setSubmitState] = useState(false);
   const [name, setName] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
+  const nameModal = useRef(null);
 
   const {
     data: startData,
@@ -86,6 +88,12 @@ function App() {
   }, [gameOver, highScoreData]);
 
   useEffect(() => {
+    if (elapsedTime < highestScore && !submitState) {
+      nameModal.current.showModal();
+    }
+  }, [elapsedTime, highestScore, submitState]);
+
+  useEffect(() => {
     // refresh list after successful post
     if (highScorePostData) {
       setRefreshKey((prev) => prev + 1);
@@ -119,22 +127,19 @@ function App() {
           <div className="final-time">
             <p>Your time was:</p> <Timer time={elapsedTime} />
           </div>
-          {elapsedTime < highestScore && !submitState ? (
-            <form className="input-field" onSubmit={handleSubmit}>
-              <p>Congratulations!</p>
-              <p>You made the top ten!</p>
-              <p>Please enter your name: </p>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <button type="submit">Submit</button>
-            </form>
-          ) : null}
+          <NameInput
+            nameModal={nameModal}
+            handleSubmit={handleSubmit}
+            name={name}
+            setName={setName}
+          />
           <div className="high-scores">
             <h3>High Scores:</h3>
-            <HighScore highScoreData={highScoreData} name={name} />
+            <HighScore
+              highScoreData={highScoreData}
+              name={name}
+              submitState={submitState}
+            />
           </div>
           <button onClick={() => location.reload()}>Play again?</button>
         </div>
