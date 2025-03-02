@@ -2,111 +2,74 @@ import MousePosition from "./components/MousePosition";
 import { useState, useEffect, useRef } from "react";
 import Timer from "./components/Timer";
 import NetworkError from "./components/NetworkError";
-import useFetch from "./useFetch";
 import HighScore from "./components/HighScore";
 import NameInput from "./components/NameInput";
+import useGameTimer from "./hooks/useGameTimer";
+import useHighScores from "./hooks/useHighScores";
 
 function App() {
   const [playState, setPlayState] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [startTime, setStartTime] = useState(0);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [timerId, setTimerId] = useState(null);
-  const [highestScore, setHighestScore] = useState(null);
-  const [submitState, setSubmitState] = useState(false);
   const [name, setName] = useState("");
-  const [refreshKey, setRefreshKey] = useState(0);
   const nameModal = useRef(null);
 
+  // Custom hooks for timer and high scores
   const {
-    data: startData,
-    error: startError,
-    loading: startLoading,
-  } = useFetch(playState && !gameOver ? "http://localhost:3000/timers" : null, {
-    method: "POST",
-  });
+    startTime,
+    elapsedTime,
+    error: timerError,
+    loading: timerLoading,
+    endTimer,
+  } = useGameTimer(playState, gameOver);
 
   const {
-    data: endData,
-    error: endError,
-    loading: endLoading,
-  } = useFetch(
-    gameOver && !elapsedTime ? `http://localhost:3000/timers/${timerId}` : null,
-    {
-      method: "PATCH",
-    }
-  );
-
-  const {
-    data: highScoreData,
+    highScores,
+    highestScore,
     error: highScoreError,
     loading: highScoreLoading,
-  } = useFetch(
-    gameOver ? `http://localhost:3000/high_scores?t=${refreshKey}` : null,
-    { method: "GET" }
-  );
+    submitScore,
+    isScoreSubmitted,
+  } = useHighScores(gameOver);
 
-  const {
-    data: highScorePostData,
-    error: highScorePostError,
-    loading: highScorePostLoading,
-  } = useFetch(
-    submitState && !refreshKey ? "http://localhost:3000/high_scores" : null,
-    {
-      method: "POST",
-      body: JSON.stringify({ name: name, time: elapsedTime }), // maybe use timerId to look up the record via server to avoids meddling from client
-    }
-  );
-
-  useEffect(() => {
-    let intervalId;
-    if (playState && !gameOver) {
-      intervalId = setInterval(() => {
-        setStartTime((prevTime) => prevTime + 1);
-      }, 10);
-    }
-    return () => clearInterval(intervalId);
-  }, [playState, gameOver]);
-
-  useEffect(() => {
-    if (playState && startData) {
-      setTimerId(startData.id);
-    }
-  }, [playState, startData]);
-
-  useEffect(() => {
-    if (gameOver && endData) {
-      setElapsedTime(endData.elapsed_time);
-    }
-  }, [gameOver, endData]);
-
-  useEffect(() => {
-    if (gameOver && highScoreData) {
-      const highScore = highScoreData.sort((a, b) => a.time - b.time);
-      setHighestScore(highScore[highScoreData.length - 1].time);
-    }
-  }, [gameOver, highScoreData]);
-
-  useEffect(() => {
-    if (elapsedTime < highestScore && !submitState) {
-      nameModal.current.showModal();
-    }
-  }, [elapsedTime, highestScore, submitState]);
-
-  useEffect(() => {
-    // refresh list after successful post
-    if (highScorePostData) {
-      setRefreshKey((prev) => prev + 1);
-    }
-  }, [highScorePostData]);
-
+  // Start game handler
   const handleClick = () => {
     setPlayState(true);
   };
 
+  // End game handler (called by MousePosition component)
+  const handleGameOver = () => {
+    setGameOver(true);
+    endTimer();
+  };
+
+  // Submit score handler
   const handleSubmit = (e) => {
     e.preventDefault();
-    !name ? null : setSubmitState(true);
+    if (name) {
+      submitScore(name, elapsedTime);
+    }
+  };
+
+  // Show name input modal if player beats high score
+  useEffect(() => {
+    if (
+      gameOver &&
+      elapsedTime &&
+      highestScore &&
+      elapsedTime < highestScore &&
+      !isScoreSubmitted
+    ) {
+      nameModal.current?.showModal();
+    }
+  }, [elapsedTime, highestScore, gameOver, isScoreSubmitted]);
+
+  // Handle errors
+  const hasError = timerError || highScoreError;
+  const isLoading = timerLoading || highScoreLoading;
+
+  // Reset game
+  const resetGame = () => {
+    window.location.reload();
   };
 
   return (
@@ -114,12 +77,9 @@ function App() {
       <h2>Where&apos;s Waldo?</h2>
       {!playState ? (
         <button onClick={handleClick}>Play</button>
-      ) : startError || endError || highScoreError || highScorePostError ? (
+      ) : hasError ? (
         <NetworkError />
-      ) : startLoading ||
-        (gameOver && endLoading) ||
-        (gameOver && highScoreLoading) ||
-        (submitState && highScorePostLoading) ? (
+      ) : isLoading ? (
         <p>Loading...</p>
       ) : gameOver ? (
         <div className="game-over">
@@ -127,25 +87,28 @@ function App() {
           <div className="final-time">
             <p>Your time was:</p> <Timer time={elapsedTime} />
           </div>
+
           <NameInput
             nameModal={nameModal}
             handleSubmit={handleSubmit}
             name={name}
             setName={setName}
           />
+
           <div className="high-scores">
             <h3>High Scores:</h3>
             <HighScore
-              highScoreData={highScoreData}
+              highScoreData={highScores}
               name={name}
-              submitState={submitState}
+              submitState={isScoreSubmitted}
             />
           </div>
-          <button onClick={() => location.reload()}>Play again?</button>
+
+          <button onClick={resetGame}>Play again?</button>
         </div>
       ) : (
         <>
-          <MousePosition setGameOver={setGameOver} time={startTime} />
+          <MousePosition handleGameOver={handleGameOver} time={startTime} />
         </>
       )}
     </div>

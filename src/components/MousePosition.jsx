@@ -1,7 +1,7 @@
 import { useRef, useState, createContext, useEffect } from "react";
 import waldo from "../assets/waldo2.jpg";
 import BackgroundImg from "./BackgroundImg";
-import useFetch from "../useFetch";
+import useFetch from "../hooks/useFetch";
 import Timer from "./Timer";
 
 export const MagnifierContext = createContext({
@@ -16,7 +16,7 @@ export const MagnifierContext = createContext({
   clientXY: {},
 });
 
-export default function MousePosition({ setGameOver, time }) {
+export default function MousePosition({ handleGameOver, time }) {
   const [[x, y], setXY] = useState([0, 0]);
   const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);
   const [showMagnifier, setShowMagnifier] = useState(false);
@@ -36,9 +36,9 @@ export default function MousePosition({ setGameOver, time }) {
 
   useEffect(() => {
     if (characters.length === 0) {
-      setGameOver(true);
+      handleGameOver();
     }
-  }, [characters, setGameOver]);
+  }, [characters, handleGameOver]);
 
   const coords = { x, y };
   const src = waldo;

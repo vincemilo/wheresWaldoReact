@@ -14,16 +14,9 @@ describe("BackgroundImg", () => {
     setImgSize: vi.fn(),
     setShowMagnifier: vi.fn(),
     setXY: vi.fn(),
-    showMagnifier: false,
-    x: 0,
-    y: 0,
-    imgWidth: 500,
-    imgHeight: 300,
     modal: { current: null },
     handleChange: vi.fn(),
-    xRatio: 0.5,
-    yRatio: 0.5,
-    selection: "test-selection",
+    correctCoords: [],
   };
   it("should return the correct character when the correct target area is clicked", async () => {
     render(<BackgroundImg {...mockProps} />);
