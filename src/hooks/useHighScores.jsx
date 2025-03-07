@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { apiGet, apiPost } from "../services/api";
 
-export default function useHighScores(isGameOver, elapsedTime) {
+export default function useHighScores(isGameOver) {
   const [highScores, setHighScores] = useState([]);
   const [highestScore, setHighestScore] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,12 +20,12 @@ export default function useHighScores(isGameOver, elapsedTime) {
         const data = await apiGet(
           `http://localhost:3000/high_scores?t=${refreshKey}`
         );
-        setHighScores(data);
 
-        // Set the highest score
+        // Set the highest score and sort high scores by lowest time
         if (data.length > 0) {
           const sortedScores = [...data].sort((a, b) => a.time - b.time);
           setHighestScore(sortedScores[sortedScores.length - 1].time);
+          setHighScores(sortedScores);
         }
 
         setLoading(false);

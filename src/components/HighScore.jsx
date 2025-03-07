@@ -1,7 +1,6 @@
 import Timer from "./Timer";
 
 export default function HighScore({ highScoreData, name, submitState }) {
-  console.log(highScoreData);
   return (
     <ol>
       {highScoreData.map((entry) => {

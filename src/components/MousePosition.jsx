@@ -73,9 +73,9 @@ export default function MousePosition({ handleGameOver, time }) {
     if (data) {
       const result = data.find(({ name }) => name === target);
       if (
-        //check if less than 0.02 difference in pixel ratio
-        round(result.x_ratio - xRatio) <= Math.abs(0.02) &&
-        round(result.y_ratio - yRatio) <= Math.abs(0.02)
+        //check if less than 0.01 difference in pixel ratio
+        round(result.x_ratio - xRatio) <= Math.abs(0.01) &&
+        round(result.y_ratio - yRatio) <= Math.abs(0.01)
       ) {
         setCharacters(
           characters.filter((character) => character.value !== target)
