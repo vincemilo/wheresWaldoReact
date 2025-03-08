@@ -2,9 +2,10 @@ import MousePosition from "./components/MousePosition";
 import { useState, useEffect, useRef } from "react";
 import Timer from "./components/Timer";
 import NetworkError from "./components/NetworkError";
-import useFetch from "./useFetch";
 import HighScore from "./components/HighScore";
 import NameInput from "./components/NameInput";
+import useTimers from "./hooks/useTimers";
+import useHighScores from "./hooks/useHighScores";
 
 function App() {
   const [playState, setPlayState] = useState(false);
@@ -18,45 +19,17 @@ function App() {
   const [refreshKey, setRefreshKey] = useState(0);
   const nameModal = useRef(null);
 
-  const {
-    data: startData,
-    error: startError,
-    loading: startLoading,
-  } = useFetch(playState && !gameOver ? "http://localhost:3000/timers" : null, {
-    method: "POST",
-  });
+  const { startData, startError, startLoading, endData, endError, endLoading } =
+    useTimers(playState, gameOver, elapsedTime, timerId);
 
   const {
-    data: endData,
-    error: endError,
-    loading: endLoading,
-  } = useFetch(
-    gameOver && !elapsedTime ? `http://localhost:3000/timers/${timerId}` : null,
-    {
-      method: "PATCH",
-    }
-  );
-
-  const {
-    data: highScoreData,
-    error: highScoreError,
-    loading: highScoreLoading,
-  } = useFetch(
-    gameOver ? `http://localhost:3000/high_scores?t=${refreshKey}` : null,
-    { method: "GET" }
-  );
-
-  const {
-    data: highScorePostData,
-    error: highScorePostError,
-    loading: highScorePostLoading,
-  } = useFetch(
-    submitState && !refreshKey ? "http://localhost:3000/high_scores" : null,
-    {
-      method: "POST",
-      body: JSON.stringify({ name: name, time: elapsedTime }), // maybe use timerId to look up the record via server to avoids meddling from client
-    }
-  );
+    highScoreData,
+    highScoreError,
+    highScoreLoading,
+    highScorePostData,
+    highScorePostError,
+    highScorePostLoading,
+  } = useHighScores(gameOver, refreshKey, submitState, name, elapsedTime);
 
   useEffect(() => {
     let intervalId;
@@ -89,7 +62,7 @@ function App() {
 
   useEffect(() => {
     if (elapsedTime < highestScore && !submitState) {
-      nameModal.current.showModal();
+      nameModal.current?.showModal();
     }
   }, [elapsedTime, highestScore, submitState]);
 

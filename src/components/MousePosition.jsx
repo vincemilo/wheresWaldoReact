@@ -1,7 +1,7 @@
 import { useRef, useState, createContext, useEffect } from "react";
 import waldo from "../assets/waldo2.jpg";
 import BackgroundImg from "./BackgroundImg";
-import useFetch from "../useFetch";
+import useFetch from "../hooks/useFetch";
 import Timer from "./Timer";
 
 export const MagnifierContext = createContext({
