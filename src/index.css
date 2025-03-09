@@ -147,3 +147,7 @@ h3 {
   font-family: cursive;
   font-size: 2rem;
 }
+
+p {
+  text-align: center;
+}

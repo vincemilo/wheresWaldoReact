@@ -94,6 +94,7 @@ function App() {
               highScoreData={highScores}
               name={name}
               submitState={isScoreSubmitted}
+              elapsedTime={elapsedTime}
             />
           </div>
 

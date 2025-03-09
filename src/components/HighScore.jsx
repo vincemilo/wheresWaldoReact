@@ -1,6 +1,13 @@
 import Timer from "./Timer";
 
-export default function HighScore({ highScoreData, name, submitState }) {
+export default function HighScore({
+  highScoreData,
+  name,
+  submitState,
+  elapsedTime,
+}) {
+  console.log(highScoreData);
+  console.log(elapsedTime);
   return (
     <ol>
       {highScoreData.map((entry) => {
@@ -8,7 +15,9 @@ export default function HighScore({ highScoreData, name, submitState }) {
           <li key={entry.id}>
             <div
               className={
-                name === entry.name && submitState ? "entry new" : "entry"
+                elapsedTime === entry.time && name === entry.name && submitState
+                  ? "entry new"
+                  : "entry"
               }
             >
               <div className="name">{entry.name}</div>{" "}
