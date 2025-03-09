@@ -85,7 +85,11 @@ export default function MousePosition({
   };
 
   const handleClick = (e) => {
-    if (e.target.id !== "select") {
+    if (
+      e.target.id !== "select" &&
+      e.target.className !== "modalDiv" &&
+      e.target.className !== "targeting-box"
+    ) {
       setClientXY([e.clientX, e.clientY]);
     }
 
