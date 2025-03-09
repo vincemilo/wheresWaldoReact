@@ -8,7 +8,6 @@ export default function useGameTimer(isPlaying, isGameOver) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Tick timer while game is playing
   useEffect(() => {
     let intervalId;
     if (isPlaying && !isGameOver) {
@@ -19,7 +18,6 @@ export default function useGameTimer(isPlaying, isGameOver) {
     return () => clearInterval(intervalId);
   }, [isPlaying, isGameOver]);
 
-  // Check if gamestate started and no timer has been created
   useEffect(() => {
     const startTimer = async () => {
       if (isPlaying && !isGameOver && !timerId) {
@@ -38,7 +36,6 @@ export default function useGameTimer(isPlaying, isGameOver) {
     startTimer();
   }, [isPlaying, isGameOver, timerId]);
 
-  // End timer function
   const endTimer = async () => {
     if (!timerId) return;
 

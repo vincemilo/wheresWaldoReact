@@ -1,4 +1,3 @@
-// hooks/useHighScores.js
 import { useState, useEffect } from "react";
 import { apiGet, apiPost } from "../services/api";
 
@@ -10,7 +9,6 @@ export default function useHighScores(isGameOver) {
   const [isScoreSubmitted, setIsScoreSubmitted] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Fetch high scores when game is over
   useEffect(() => {
     const fetchHighScores = async () => {
       if (!isGameOver) return;
@@ -21,7 +19,6 @@ export default function useHighScores(isGameOver) {
           `http://localhost:3000/high_scores?t=${refreshKey}`
         );
 
-        // Set the highest score and sort high scores by lowest time
         if (data.length > 0) {
           const sortedScores = [...data].sort((a, b) => a.time - b.time);
           setHighestScore(sortedScores[sortedScores.length - 1].time);
@@ -38,7 +35,6 @@ export default function useHighScores(isGameOver) {
     fetchHighScores();
   }, [isGameOver, refreshKey]);
 
-  // Submit score function
   const submitScore = async (name, time) => {
     if (isScoreSubmitted || !time) return;
 

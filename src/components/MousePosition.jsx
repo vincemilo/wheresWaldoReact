@@ -3,6 +3,32 @@ import waldo from "../assets/waldo2.jpg";
 import BackgroundImg from "./BackgroundImg";
 import useFetch from "../hooks/useFetch";
 import Timer from "./Timer";
+import PropTypes from "prop-types";
+
+const MAGNIFIER_SETTINGS = {
+  magHeight: 100,
+  magWidth: 100,
+  getZoomLevel: (width) => {
+    if (width < 500) return 4;
+    if (width > 1000) return 2;
+    return 3;
+  },
+};
+
+const INITIAL_CHARACTERS = [
+  { name: "Waldo", value: "waldo" },
+  // { name: "Wilma", value: "wilma" },
+  // { name: "The Wizard", value: "wizard" },
+  // { name: "Odlaw", value: "odlaw" },
+];
+
+const round = (num) => {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
+
+const isCloseEnough = (a, b, threshold = 0.01) => {
+  return Math.abs(round(a - b)) <= threshold;
+};
 
 export const MagnifierContext = createContext({
   coords: {},
@@ -16,23 +42,26 @@ export const MagnifierContext = createContext({
   clientXY: {},
 });
 
-export default function MousePosition({ handleGameOver, time }) {
+export default function MousePosition({
+  handleGameOver,
+  time,
+  initialCharacters = INITIAL_CHARACTERS,
+}) {
   const [[x, y], setXY] = useState([0, 0]);
   const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);
-  const [showMagnifier, setShowMagnifier] = useState(false);
-  const [[xRatio, yRatio], setXYRatio] = useState([0, 0]);
-  const modal = useRef(null);
-  const [selection, setSelection] = useState("");
-  const [targetingBox, setTargetingBox] = useState(false);
-  const { data, loading, error } = useFetch("http://localhost:3000/characters");
-  const [characters, setCharacters] = useState([
-    { name: "Waldo", value: "waldo" },
-    // { name: "Wilma", value: "wilma" },
-    // { name: "The Wizard", value: "wizard" },
-    // { name: "Odlaw", value: "odlaw" },
-  ]);
-  const [correctCoords, setCorrectCoords] = useState([]);
   const [[clientX, clientY], setClientXY] = useState([0, 0]);
+  const [[xRatio, yRatio], setXYRatio] = useState([0, 0]);
+
+  const [showMagnifier, setShowMagnifier] = useState(false);
+  const [targetingBox, setTargetingBox] = useState(false);
+  const [selection, setSelection] = useState("");
+
+  const [characters, setCharacters] = useState(initialCharacters);
+  const [correctCoords, setCorrectCoords] = useState([]);
+
+  const modal = useRef(null);
+
+  const { data, loading, error } = useFetch("http://localhost:3000/characters");
 
   useEffect(() => {
     if (characters.length === 0) {
@@ -40,23 +69,36 @@ export default function MousePosition({ handleGameOver, time }) {
     }
   }, [characters, handleGameOver]);
 
-  const coords = { x, y };
-  const src = waldo;
-  const imgSize = { w: imgWidth, h: imgHeight };
-  const magnifierSettings = {
-    magHeight: 100,
-    magWidth: 100,
-    zoomLevel: imgSize.w < 500 ? 4 : imgSize.w > 1000 ? 2 : 3,
+  const contextValue = {
+    coords: { x, y },
+    src: waldo,
+    imgSize: { w: imgWidth, h: imgHeight },
+    showMagnifier,
+    targetingBox,
+    magnifierSettings: {
+      ...MAGNIFIER_SETTINGS,
+      zoomLevel: MAGNIFIER_SETTINGS.getZoomLevel(imgWidth),
+    },
+    selection,
+    characters,
+    clientXY: { clientX, clientY },
   };
-  const clientXY = { clientX, clientY };
 
   const handleClick = (e) => {
-    if (e.target.id != "select") setClientXY([e.clientX, e.clientY]);
+    if (e.target.id !== "select") {
+      setClientXY([e.clientX, e.clientY]);
+    }
+
     setTargetingBox(true);
     setXYRatio([x / imgWidth, y / imgHeight]);
-    if (!modal.current.open) modal.current.showModal();
-    if (e.target.className === "modal" || e.target.className === "option")
+
+    if (modal.current && !modal.current.open) {
+      modal.current.showModal();
+    }
+
+    if (e.target.className === "modal" || e.target.className === "option") {
       modal.current.close();
+    }
   };
 
   const handleChange = (e) => {
@@ -64,53 +106,45 @@ export default function MousePosition({ handleGameOver, time }) {
     validateSelection(e.target.value);
   };
 
-  const round = (num) => {
-    return Math.round((num + Number.EPSILON) * 100) / 100;
-  };
-
   const validateSelection = (target) => {
     setSelection(target);
-    if (data) {
-      const result = data.find(({ name }) => name === target);
-      if (
-        //check if less than 0.01 difference in pixel ratio
-        round(result.x_ratio - xRatio) <= Math.abs(0.01) &&
-        round(result.y_ratio - yRatio) <= Math.abs(0.01)
-      ) {
-        setCharacters(
-          characters.filter((character) => character.value !== target)
-        );
-        setCorrectCoords([...correctCoords, [xRatio, yRatio]]);
-      } else {
-        console.log("fail");
-      }
+
+    if (!data) return;
+
+    const result = data.find(({ name }) => name === target);
+    if (!result) return;
+
+    const isCorrect =
+      isCloseEnough(result.x_ratio, xRatio) &&
+      isCloseEnough(result.y_ratio, yRatio);
+
+    if (isCorrect) {
+      setCharacters(
+        characters.filter((character) => character.value !== target)
+      );
+      setCorrectCoords([...correctCoords, [xRatio, yRatio]]);
     }
-    modal.current.close();
+
+    if (modal.current) {
+      modal.current.close();
+    }
     setSelection("");
   };
-  if (loading) return <p>Loading...</p>;
-  if (error)
+
+  if (loading) return <p data-testid="loading-state">Loading...</p>;
+
+  if (error) {
     return (
-      <p>
+      <p data-testid="error-state">
         A network error was encountered.{" "}
-        <button onClick={() => location.reload()}>Refresh</button>
+        <button onClick={() => window.location.reload()}>Refresh</button>
       </p>
     );
+  }
+
   return (
     <>
-      <MagnifierContext.Provider
-        value={{
-          coords,
-          src,
-          imgSize,
-          showMagnifier,
-          targetingBox,
-          magnifierSettings,
-          selection,
-          characters,
-          clientXY,
-        }}
-      >
+      <MagnifierContext.Provider value={contextValue}>
         <BackgroundImg
           handleClick={handleClick}
           src={waldo}
@@ -146,3 +180,14 @@ export default function MousePosition({ handleGameOver, time }) {
     </>
   );
 }
+
+MousePosition.propTypes = {
+  handleGameOver: PropTypes.func.isRequired,
+  time: PropTypes.number.isRequired,
+  initialCharacters: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    })
+  ),
+};

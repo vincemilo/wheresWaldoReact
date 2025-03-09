@@ -13,7 +13,6 @@ function App() {
   const [name, setName] = useState("");
   const nameModal = useRef(null);
 
-  // Custom hooks for timer and high scores
   const {
     startTime,
     elapsedTime,
@@ -31,18 +30,15 @@ function App() {
     isScoreSubmitted,
   } = useHighScores(gameOver);
 
-  // Start game handler
   const handleClick = () => {
     setPlayState(true);
   };
 
-  // End game handler (called by MousePosition component)
   const handleGameOver = () => {
     setGameOver(true);
     endTimer();
   };
 
-  // Submit score handler
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name) {
@@ -50,7 +46,6 @@ function App() {
     }
   };
 
-  // Show name input modal if player beats high score
   useEffect(() => {
     if (
       gameOver &&
@@ -63,11 +58,9 @@ function App() {
     }
   }, [elapsedTime, highestScore, gameOver, isScoreSubmitted]);
 
-  // Handle errors
   const hasError = timerError || highScoreError;
   const isLoading = timerLoading || highScoreLoading;
 
-  // Reset game
   const resetGame = () => {
     window.location.reload();
   };

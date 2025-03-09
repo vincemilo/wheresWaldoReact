@@ -1,11 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import BackgroundImg from "../src/components/BackgroundImg";
-
-// const positions = {
-//   waldo: [0.37, 0.43],
-// };
+import BackgroundImg from "../BackgroundImg";
 
 describe("BackgroundImg", () => {
   const mockProps = {
