@@ -122,7 +122,8 @@ button {
   box-shadow: black 0.25rem 0.25rem;
 }
 
-button:hover {
+button:hover,
+.selected {
   background-color: #7e3636;
 }
 
@@ -150,4 +151,12 @@ h3 {
 
 p {
   text-align: center;
+}
+
+.difficulty-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  gap: 1rem;
 }

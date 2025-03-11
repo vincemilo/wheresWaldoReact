@@ -6,11 +6,13 @@ import HighScore from "./components/HighScore";
 import NameInput from "./components/NameInput";
 import useGameTimer from "./hooks/useGameTimer";
 import useHighScores from "./hooks/useHighScores";
+import DifficultyButtons from "./components/DifficultyButtons";
 
 function App() {
   const [playState, setPlayState] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [name, setName] = useState("");
+
   const nameModal = useRef(null);
 
   const {
@@ -69,7 +71,11 @@ function App() {
     <div className="wrapper">
       <h2>Where&apos;s Waldo?</h2>
       {!playState ? (
-        <button onClick={handleClick}>Play</button>
+        <>
+          <button onClick={handleClick}>Play</button>
+          <p>Select difficulty:</p>
+          <DifficultyButtons />
+        </>
       ) : hasError ? (
         <NetworkError />
       ) : isLoading ? (
