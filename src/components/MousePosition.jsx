@@ -1,5 +1,7 @@
 import { useRef, useState, createContext, useEffect } from "react";
-import waldo from "../assets/waldo2.jpg";
+import waldoEasy from "../assets/waldo.jpg";
+import waldoMedium from "../assets/waldo3.jpg";
+import waldoHard from "../assets/waldo2.jpg";
 import BackgroundImg from "./BackgroundImg";
 import useFetch from "../hooks/useFetch";
 import Timer from "./Timer";
@@ -17,9 +19,9 @@ const MAGNIFIER_SETTINGS = {
 
 const INITIAL_CHARACTERS = [
   { name: "Waldo", value: "waldo" },
-  // { name: "Wilma", value: "wilma" },
-  // { name: "The Wizard", value: "wizard" },
-  // { name: "Odlaw", value: "odlaw" },
+  { name: "Wilma", value: "wilma" },
+  { name: "The Wizard", value: "wizard" },
+  { name: "Odlaw", value: "odlaw" },
 ];
 
 const round = (num) => {
@@ -45,18 +47,23 @@ export const MagnifierContext = createContext({
 export default function MousePosition({
   handleGameOver,
   time,
+  difficulty,
   initialCharacters = INITIAL_CHARACTERS,
 }) {
   const [[x, y], setXY] = useState([0, 0]);
   const [[imgWidth, imgHeight], setImgSize] = useState([0, 0]);
   const [[clientX, clientY], setClientXY] = useState([0, 0]);
   const [[xRatio, yRatio], setXYRatio] = useState([0, 0]);
+  const src =
+    difficulty === 1 ? waldoEasy : difficulty === 2 ? waldoMedium : waldoHard;
 
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [targetingBox, setTargetingBox] = useState(false);
   const [selection, setSelection] = useState("");
 
-  const [characters, setCharacters] = useState(initialCharacters);
+  const [characters, setCharacters] = useState(
+    difficulty === 1 ? [initialCharacters[0]] : initialCharacters
+  );
   const [correctCoords, setCorrectCoords] = useState([]);
 
   const modal = useRef(null);
@@ -71,7 +78,7 @@ export default function MousePosition({
 
   const contextValue = {
     coords: { x, y },
-    src: waldo,
+    src: src,
     imgSize: { w: imgWidth, h: imgHeight },
     showMagnifier,
     targetingBox,
@@ -151,7 +158,7 @@ export default function MousePosition({
       <MagnifierContext.Provider value={contextValue}>
         <BackgroundImg
           handleClick={handleClick}
-          src={waldo}
+          src={src}
           setImgSize={setImgSize}
           setShowMagnifier={setShowMagnifier}
           setXY={setXY}
@@ -161,7 +168,7 @@ export default function MousePosition({
         />
       </MagnifierContext.Provider>
       {/* Debug panel for testing */}
-      {/* <div className="debugPanel">
+      <div className="debugPanel">
         <div>Offset X Position: {x}</div>
         <div>Offset Y Position: {y}</div>
         <div>X Ratio: {xRatio}</div>
@@ -171,7 +178,7 @@ export default function MousePosition({
         <div>Selection: {selection}</div>
         <div>ClientX: {clientX}</div>
         <div>ClientY: {clientY}</div>
-      </div> */}
+      </div>
       {/* <p>
         <a
           href="https://www.flaticon.com/free-icons/foursquare-check-in"
@@ -194,4 +201,5 @@ MousePosition.propTypes = {
       value: PropTypes.string.isRequired,
     })
   ),
+  difficulty: PropTypes.number.isRequired,
 };

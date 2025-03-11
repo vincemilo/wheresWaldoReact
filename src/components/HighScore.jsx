@@ -6,8 +6,6 @@ export default function HighScore({
   submitState,
   elapsedTime,
 }) {
-  console.log(highScoreData);
-  console.log(elapsedTime);
   return (
     <ol>
       {highScoreData.map((entry) => {

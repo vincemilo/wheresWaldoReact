@@ -1,13 +1,8 @@
-import { useState } from "react";
-
-export default function DifficultyButtons() {
-  const [difficulty, setDifficulty] = useState(1);
-
+export default function DifficultyButtons({ difficulty, setDifficulty }) {
   const handleClick = (selection) => {
     setDifficulty(selection);
   };
 
-  console.log(difficulty);
   return (
     <div className="difficulty-buttons">
       <button

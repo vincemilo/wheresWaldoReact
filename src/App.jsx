@@ -11,7 +11,10 @@ import DifficultyButtons from "./components/DifficultyButtons";
 function App() {
   const [playState, setPlayState] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
   const [name, setName] = useState("");
+
+  const [difficulty, setDifficulty] = useState(1);
 
   const nameModal = useRef(null);
 
@@ -74,7 +77,10 @@ function App() {
         <>
           <button onClick={handleClick}>Play</button>
           <p>Select difficulty:</p>
-          <DifficultyButtons />
+          <DifficultyButtons
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
+          />
         </>
       ) : hasError ? (
         <NetworkError />
@@ -108,7 +114,11 @@ function App() {
         </div>
       ) : (
         <>
-          <MousePosition handleGameOver={handleGameOver} time={startTime} />
+          <MousePosition
+            handleGameOver={handleGameOver}
+            time={startTime}
+            difficulty={difficulty}
+          />
         </>
       )}
     </div>
