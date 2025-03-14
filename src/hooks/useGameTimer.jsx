@@ -56,5 +56,6 @@ export default function useGameTimer(url, isPlaying, isGameOver) {
     loading,
     error,
     endTimer,
+    timerId,
   };
 }

@@ -26,6 +26,7 @@ function App() {
     error: timerError,
     loading: timerLoading,
     endTimer,
+    timerId,
   } = useGameTimer(url, playState, gameOver);
 
   const {
@@ -49,7 +50,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name) {
-      submitScore(name, elapsedTime);
+      submitScore(name, timerId);
     }
   };
 
