@@ -19,9 +19,9 @@ const MAGNIFIER_SETTINGS = {
 
 const INITIAL_CHARACTERS = [
   { name: "Waldo", value: "waldo" },
-  { name: "Wilma", value: "wilma" },
-  { name: "The Wizard", value: "wizard" },
-  { name: "Odlaw", value: "odlaw" },
+  // { name: "Wilma", value: "wilma" },
+  // { name: "The Wizard", value: "wizard" },
+  // { name: "Odlaw", value: "odlaw" },
 ];
 
 const round = (num) => {
@@ -45,6 +45,7 @@ export const MagnifierContext = createContext({
 });
 
 export default function MousePosition({
+  url,
   handleGameOver,
   time,
   difficulty,
@@ -61,14 +62,18 @@ export default function MousePosition({
   const [targetingBox, setTargetingBox] = useState(false);
   const [selection, setSelection] = useState("");
 
-  const [characters, setCharacters] = useState(
-    difficulty === 1 ? [initialCharacters[0]] : initialCharacters
-  );
+  const [characters, setCharacters] = useState(initialCharacters);
   const [correctCoords, setCorrectCoords] = useState([]);
 
   const modal = useRef(null);
 
-  const { data, loading, error } = useFetch("http://localhost:3000/characters");
+  const { data, loading, error } = useFetch(
+    difficulty === 1
+      ? `${url}/easy_characters`
+      : difficulty === 2
+      ? `${url}/med_characters`
+      : `${url}/characters`
+  );
 
   useEffect(() => {
     if (characters.length === 0) {
@@ -202,4 +207,5 @@ MousePosition.propTypes = {
     })
   ),
   difficulty: PropTypes.number.isRequired,
+  url: PropTypes.string.isRequired,
 };

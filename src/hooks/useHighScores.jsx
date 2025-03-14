@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { apiGet, apiPost } from "../services/api";
 
-export default function useHighScores(isGameOver) {
+export default function useHighScores(url, difficulty, isGameOver) {
   const [highScores, setHighScores] = useState([]);
   const [highestScore, setHighestScore] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,11 @@ export default function useHighScores(isGameOver) {
       try {
         setLoading(true);
         const data = await apiGet(
-          `http://localhost:3000/high_scores?t=${refreshKey}`
+          difficulty === 1
+            ? `${url}/easy_high_scores?t=${refreshKey}`
+            : difficulty === 2
+            ? `${url}/med_high_scores?t=${refreshKey}`
+            : `${url}/high_scores?t=${refreshKey}`
         );
 
         if (data.length > 0) {
@@ -33,17 +37,25 @@ export default function useHighScores(isGameOver) {
     };
 
     fetchHighScores();
-  }, [isGameOver, refreshKey]);
+  }, [isGameOver, refreshKey, difficulty, url]);
 
   const submitScore = async (name, time) => {
     if (isScoreSubmitted || !time) return;
 
     try {
       setLoading(true);
-      await apiPost("http://localhost:3000/high_scores", {
-        name,
-        time,
-      });
+
+      await apiPost(
+        difficulty === 1
+          ? `${url}/easy_high_scores`
+          : difficulty === 2
+          ? `${url}/med_high_scores`
+          : `${url}/high_scores`,
+        {
+          name,
+          time,
+        }
+      );
       setIsScoreSubmitted(true);
       setRefreshKey((prev) => prev + 1); // Trigger refresh of high scores
       setLoading(false);

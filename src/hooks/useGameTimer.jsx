@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { apiPost, apiPatch } from "../services/api";
 
-export default function useGameTimer(isPlaying, isGameOver) {
+export default function useGameTimer(url, isPlaying, isGameOver) {
   const [startTime, setStartTime] = useState(0);
   const [timerId, setTimerId] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -23,7 +23,7 @@ export default function useGameTimer(isPlaying, isGameOver) {
       if (isPlaying && !isGameOver && !timerId) {
         try {
           setLoading(true);
-          const data = await apiPost("http://localhost:3000/timers");
+          const data = await apiPost(`${url}/timers`);
           setTimerId(data.id);
           setLoading(false);
         } catch (err) {
@@ -34,14 +34,14 @@ export default function useGameTimer(isPlaying, isGameOver) {
     };
 
     startTimer();
-  }, [isPlaying, isGameOver, timerId]);
+  }, [url, isPlaying, isGameOver, timerId]);
 
   const endTimer = async () => {
     if (!timerId) return;
 
     try {
       setLoading(true);
-      const data = await apiPatch(`http://localhost:3000/timers/${timerId}`);
+      const data = await apiPatch(`${url}/timers/${timerId}`);
       setElapsedTime(data.elapsed_time);
       setLoading(false);
     } catch (err) {

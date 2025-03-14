@@ -18,13 +18,15 @@ function App() {
 
   const nameModal = useRef(null);
 
+  const url = "http://localhost:3000";
+
   const {
     startTime,
     elapsedTime,
     error: timerError,
     loading: timerLoading,
     endTimer,
-  } = useGameTimer(playState, gameOver);
+  } = useGameTimer(url, playState, gameOver);
 
   const {
     highScores,
@@ -33,7 +35,7 @@ function App() {
     loading: highScoreLoading,
     submitScore,
     isScoreSubmitted,
-  } = useHighScores(gameOver);
+  } = useHighScores(url, difficulty, gameOver);
 
   const handleClick = () => {
     setPlayState(true);
@@ -115,6 +117,7 @@ function App() {
       ) : (
         <>
           <MousePosition
+            url={url}
             handleGameOver={handleGameOver}
             time={startTime}
             difficulty={difficulty}
