@@ -50,7 +50,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name) {
-      submitScore(name, timerId);
+      submitScore(name, timerId); //uses timerID instead of elapsedTime for added security
     }
   };
 
@@ -70,7 +70,10 @@ function App() {
   const isLoading = timerLoading || highScoreLoading;
 
   const resetGame = () => {
-    window.location.reload();
+    setPlayState(false);
+    setGameOver(false);
+    setName("");
+    setDifficulty(1);
   };
 
   return (
@@ -91,7 +94,7 @@ function App() {
         <p>Loading...</p>
       ) : gameOver ? (
         <div className="game-over">
-          <h3 className="game-over-text">Game over!</h3>
+          <h3 className="game-over-text">Game Over!</h3>
           <div className="final-time">
             <p>Your time was:</p> <Timer time={elapsedTime} />
           </div>
@@ -122,6 +125,7 @@ function App() {
             handleGameOver={handleGameOver}
             time={startTime}
             difficulty={difficulty}
+            playState={playState}
           />
         </>
       )}

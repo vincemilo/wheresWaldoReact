@@ -6,6 +6,7 @@ import BackgroundImg from "./BackgroundImg";
 import useFetch from "../hooks/useFetch";
 import Timer from "./Timer";
 import PropTypes from "prop-types";
+import DebugPanel from "./DebugPanel";
 
 const MAGNIFIER_SETTINGS = {
   magHeight: 100,
@@ -19,9 +20,9 @@ const MAGNIFIER_SETTINGS = {
 
 const INITIAL_CHARACTERS = [
   { name: "Waldo", value: "waldo" },
-  // { name: "Wilma", value: "wilma" },
-  // { name: "The Wizard", value: "wizard" },
-  // { name: "Odlaw", value: "odlaw" },
+  { name: "Wilma", value: "wilma" },
+  { name: "The Wizard", value: "wizard" },
+  { name: "Odlaw", value: "odlaw" },
 ];
 
 const round = (num) => {
@@ -173,17 +174,17 @@ export default function MousePosition({
         />
       </MagnifierContext.Provider>
       {/* Debug panel for testing */}
-      <div className="debugPanel">
-        <div>Offset X Position: {x}</div>
-        <div>Offset Y Position: {y}</div>
-        <div>X Ratio: {xRatio}</div>
-        <div>Y Ratio: {yRatio}</div>
-        <div>Img Height: {imgHeight}</div>
-        <div>Img Width: {imgWidth}</div>
-        <div>Selection: {selection}</div>
-        <div>ClientX: {clientX}</div>
-        <div>ClientY: {clientY}</div>
-      </div>
+      {/* <DebugPanel
+        x={x}
+        y={y}
+        xRatio={xRatio}
+        yRatio={yRatio}
+        imgHeight={imgHeight}
+        imgWidth={imgWidth}
+        selection={selection}
+        clientX={clientX}
+        clientY={clientY}
+      /> */}
       {/* <p>
         <a
           href="https://www.flaticon.com/free-icons/foursquare-check-in"
