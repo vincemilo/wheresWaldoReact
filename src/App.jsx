@@ -18,7 +18,7 @@ function App() {
 
   const nameModal = useRef(null);
 
-  const url = "http://localhost:3000";
+  const url = "waldo-api-cold-brook-7695.fly.dev";
 
   const {
     startTime,

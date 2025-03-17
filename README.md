@@ -26,6 +26,7 @@ A photo tagging app using React frontend and Rails backend.
 - Still don't really "get" React testing but it does see the things and do the right stuff when you click them as far as my tests are concerned
 - Decided to add Easy and Medium modes and maps to fill the game out, had to refactor to more easily accomodate them as well as the difficulty settings. Added Easy and Medium character locations and high score tables to API
 - Changed the high score submit button to take the timer ID instead of the elapsed time to add some extra security
+- A little better appreciation for testing after adding the difficulty settings, could see how this would matter more for larger apps though
 
 ### To Do:
 
