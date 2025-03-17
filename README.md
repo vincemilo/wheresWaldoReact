@@ -24,8 +24,9 @@ A photo tagging app using React frontend and Rails backend.
 - Made the enter name screen a modal dialog and realized after much frustration I had a ref in a conditional render which is why it could never find it to open it!
 - Big refactor moving App and MousePosition components around and making more modular in order to more easily test them.
 - Still don't really "get" React testing but it does see the things and do the right stuff when you click them as far as my tests are concerned
+- Decided to add Easy and Medium modes and maps to fill the game out, had to refactor to more easily accomodate them as well as the difficulty settings. Added Easy and Medium character locations and high score tables to API
+- Changed the high score submit button to take the timer ID instead of the elapsed time to add some extra security
 
 ### To Do:
 
-- Fix high score post to look up timer rather than post from client
 - Deploy

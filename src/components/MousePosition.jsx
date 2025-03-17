@@ -20,9 +20,9 @@ const MAGNIFIER_SETTINGS = {
 
 const INITIAL_CHARACTERS = [
   { name: "Waldo", value: "waldo" },
-  { name: "Wilma", value: "wilma" },
-  { name: "The Wizard", value: "wizard" },
-  { name: "Odlaw", value: "odlaw" },
+  // { name: "Wilma", value: "wilma" },
+  // { name: "The Wizard", value: "wizard" },
+  // { name: "Odlaw", value: "odlaw" },
 ];
 
 const round = (num) => {
@@ -68,13 +68,13 @@ export default function MousePosition({
 
   const modal = useRef(null);
 
-  const { data, loading, error } = useFetch(
+  const endpoint =
     difficulty === 1
       ? `${url}/easy_characters`
       : difficulty === 2
       ? `${url}/med_characters`
-      : `${url}/characters`
-  );
+      : `${url}/characters`;
+  const { data, loading, error } = useFetch(endpoint);
 
   useEffect(() => {
     if (characters.length === 0) {
