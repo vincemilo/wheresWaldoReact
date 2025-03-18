@@ -10,13 +10,13 @@ export default function useGameTimer(url, isPlaying, isGameOver) {
 
   useEffect(() => {
     let intervalId;
-    if (isPlaying && !isGameOver) {
+    if (timerId && !isGameOver) {
       intervalId = setInterval(() => {
         setStartTime((prevTime) => prevTime + 1);
       }, 10);
     }
     return () => clearInterval(intervalId);
-  }, [isPlaying, isGameOver]);
+  }, [timerId, isGameOver]);
 
   useEffect(() => {
     const startTimer = async () => {
