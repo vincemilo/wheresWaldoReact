@@ -2,6 +2,10 @@
 
 A photo tagging app using React frontend and Rails backend.
 
+Live preview: https://vincemilowhereswaldo.netlify.app/
+
+API: https://github.com/vincemilo/waldo_api
+
 ## Features
 
 - Magnifying glass zooms in on image within its field of view
@@ -31,8 +35,8 @@ A photo tagging app using React frontend and Rails backend.
 - Added some testing to API as well, though most not needed it turns out due to controller configuration only allowing valid entries in the first place
 - Added env files so I can switch back and forth between development and production URLs
 - Found bug where resetting the main game states instead of doing a window reload was causing errors for other leftover states so just returned it back to a hard reset for now
+- Had to manually reseed database on live server to get updated position for Wizard on Easy map
 
 ### To Do
 
-- Revist increment counter and remind why I'm multiplying by 100 in Timer.elapsed_time
-- Write tests for checkmarks, background image, magnifying glass, other components as needed
+- Checkmarks look weird on Easy and Medium maps
