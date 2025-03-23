@@ -6,7 +6,7 @@ import BackgroundImg from "./BackgroundImg";
 import useFetch from "../hooks/useFetch";
 import Timer from "./Timer";
 import PropTypes from "prop-types";
-import DebugPanel from "./DebugPanel";
+// import DebugPanel from "./DebugPanel";
 
 const MAGNIFIER_SETTINGS = {
   magHeight: 100,
@@ -20,9 +20,9 @@ const MAGNIFIER_SETTINGS = {
 
 const INITIAL_CHARACTERS = [
   { name: "Waldo", value: "waldo" },
-  // { name: "Wilma", value: "wilma" },
-  // { name: "The Wizard", value: "wizard" },
-  // { name: "Odlaw", value: "odlaw" },
+  { name: "Wilma", value: "wilma" },
+  { name: "The Wizard", value: "wizard" },
+  { name: "Odlaw", value: "odlaw" },
 ];
 
 const round = (num) => {
@@ -125,7 +125,6 @@ export default function MousePosition({
 
   const validateSelection = (target) => {
     setSelection(target);
-
     if (!data) return;
 
     const result = data.find(({ name }) => name === target);

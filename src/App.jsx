@@ -18,7 +18,7 @@ function App() {
 
   const nameModal = useRef(null);
 
-  const url = "https://waldo-api-cold-brook-7695.fly.dev";
+  const url = import.meta.env.VITE_API_URL;
 
   const {
     startTime,
@@ -70,10 +70,7 @@ function App() {
   const isLoading = timerLoading || highScoreLoading;
 
   const resetGame = () => {
-    setPlayState(false);
-    setGameOver(false);
-    setName("");
-    setDifficulty(1);
+    window.location.reload();
   };
 
   return (
