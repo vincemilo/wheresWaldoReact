@@ -160,3 +160,25 @@ p {
   width: 100%;
   gap: 1rem;
 }
+
+.character-portraits {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.character-portrait {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.character-portraits img {
+  height: 3rem;
+  max-width: 90%;
+  border: 1px solid black;
+}

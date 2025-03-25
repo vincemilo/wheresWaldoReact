@@ -36,6 +36,7 @@ API: https://github.com/vincemilo/waldo_api
 - Added env files so I can switch back and forth between development and production URLs
 - Found bug where resetting the main game states instead of doing a window reload was causing errors for other leftover states so just returned it back to a hard reset for now
 - Had to manually reseed database on live server to get updated position for Wizard on Easy map
+- Added character portraits to identify characters and added feature to dynamically check off when found
 
 ### To Do
 

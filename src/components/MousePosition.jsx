@@ -2,10 +2,16 @@ import { useRef, useState, createContext, useEffect } from "react";
 import waldoEasy from "../assets/waldo.jpg";
 import waldoMedium from "../assets/waldo3.jpg";
 import waldoHard from "../assets/waldo2.jpg";
+import waldoHead from "../assets/waldoHead.png";
+import wilmaHead from "../assets/wilma.png";
+import wizardHead from "../assets/wizard.png";
+import odlawHead from "../assets/odlaw.png";
+import checkmark from "../assets/check.png";
 import BackgroundImg from "./BackgroundImg";
 import useFetch from "../hooks/useFetch";
 import Timer from "./Timer";
 import PropTypes from "prop-types";
+import CharacterPortraits from "./CharacterPortraits";
 // import DebugPanel from "./DebugPanel";
 
 const MAGNIFIER_SETTINGS = {
@@ -65,6 +71,7 @@ export default function MousePosition({
 
   const [characters, setCharacters] = useState(initialCharacters);
   const [correctCoords, setCorrectCoords] = useState([]);
+  const [foundCharacters, setFoundCharacters] = useState({});
 
   const modal = useRef(null);
 
@@ -135,6 +142,7 @@ export default function MousePosition({
       isCloseEnough(result.y_ratio, yRatio);
 
     if (isCorrect) {
+      setFoundCharacters((prevState) => ({ ...prevState, [target]: true }));
       setCharacters(
         characters.filter((character) => character.value !== target)
       );
@@ -160,6 +168,11 @@ export default function MousePosition({
 
   return (
     <>
+      <CharacterPortraits
+        foundCharacters={foundCharacters}
+        checkmark={checkmark}
+        portraits={{ waldoHead, wilmaHead, wizardHead, odlawHead }}
+      />
       <MagnifierContext.Provider value={contextValue}>
         <BackgroundImg
           handleClick={handleClick}
